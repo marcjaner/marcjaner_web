@@ -1,6 +1,7 @@
 
 export interface Project {
   id: string;
+  slug: string;
   title: string;
   description: string;
   content: string;
@@ -14,6 +15,7 @@ export interface Project {
 
 export interface BlogPost {
   id: string;
+  slug: string;
   title: string;
   excerpt: string;
   content: string;

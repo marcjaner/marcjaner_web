@@ -17,6 +17,7 @@ export function parseProjectMarkdown(content: string): Project {
   
   return {
     id: frontMatter.id as string,
+    slug: frontMatter.slug || frontMatter.id as string, // Use slug if provided or fallback to id
     title: frontMatter.title as string,
     description: frontMatter.description as string,
     content: markdownContent,
@@ -35,6 +36,7 @@ export function parseBlogMarkdown(content: string): BlogPost {
   
   return {
     id: frontMatter.id as string,
+    slug: frontMatter.slug || frontMatter.id as string, // Use slug if provided or fallback to id
     title: frontMatter.title as string,
     excerpt: frontMatter.excerpt as string,
     content: markdownContent,

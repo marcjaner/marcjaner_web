@@ -1,84 +1,28 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, Github } from 'lucide-react';
 import { Project } from '@/types/collections';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
+// Import project markdown files
+import data1 from '@/content/projects/data-visualization-dashboard.md?raw';
+import data2 from '@/content/projects/etl-pipeline-framework.md?raw';
+import { parseProjectMarkdown } from '@/lib/markdown';
+
 const ProjectsPage = () => {
-  // This would eventually pull from your collection, but for now we'll use dummy data
-  const projects: Project[] = [
-    {
-      id: '1',
-      title: 'Data Visualization Dashboard',
-      description: 'An interactive dashboard for visualizing complex datasets using D3.js and React.',
-      content: 'Detailed description of the data visualization dashboard project...',
-      featuredImage: '/placeholder.svg',
-      technologies: ['React', 'D3.js', 'Data Visualization'],
-      githubUrl: 'https://github.com',
-      liveUrl: 'https://demo.com',
-      featured: true,
-      date: '2023-05-15'
-    },
-    {
-      id: '2',
-      title: 'ETL Pipeline Framework',
-      description: 'A modular framework for building efficient ETL pipelines with Python and Apache Airflow.',
-      content: 'Detailed description of the ETL pipeline framework project...',
-      featuredImage: '/placeholder.svg',
-      technologies: ['Python', 'Airflow', 'ETL'],
-      githubUrl: 'https://github.com',
-      featured: true,
-      date: '2023-03-10'
-    },
-    {
-      id: '3',
-      title: 'Real-time Analytics API',
-      description: 'A high-performance API for real-time analytics built with Node.js and WebSockets.',
-      content: 'Detailed description of the real-time analytics API project...',
-      featuredImage: '/placeholder.svg',
-      technologies: ['Node.js', 'WebSockets', 'Real-time'],
-      githubUrl: 'https://github.com',
-      liveUrl: 'https://demo.com',
-      featured: false,
-      date: '2023-01-20'
-    },
-    {
-      id: '4',
-      title: 'Machine Learning Model Deployment',
-      description: 'A system for deploying machine learning models to production with monitoring and A/B testing.',
-      content: 'Detailed description of the machine learning model deployment project...',
-      featuredImage: '/placeholder.svg',
-      technologies: ['Python', 'ML', 'DevOps'],
-      githubUrl: 'https://github.com',
-      liveUrl: 'https://demo.com',
-      featured: false,
-      date: '2022-11-05'
-    },
-    {
-      id: '5',
-      title: 'Data Lake Architecture',
-      description: 'A scalable data lake architecture using AWS S3, Glue, and Athena for cost-effective analytics.',
-      content: 'Detailed description of the data lake architecture project...',
-      featuredImage: '/placeholder.svg',
-      technologies: ['AWS', 'Data Lake', 'Cloud'],
-      githubUrl: 'https://github.com',
-      featured: false,
-      date: '2022-09-18'
-    },
-    {
-      id: '6',
-      title: 'IoT Data Collection Platform',
-      description: 'A platform for collecting, processing, and analyzing data from IoT devices in real-time.',
-      content: 'Detailed description of the IoT data collection platform project...',
-      featuredImage: '/placeholder.svg',
-      technologies: ['IoT', 'MQTT', 'Time-series DB'],
-      githubUrl: 'https://github.com',
-      liveUrl: 'https://demo.com',
-      featured: false,
-      date: '2022-07-30'
-    }
-  ];
+  const [projects, setProjects] = useState<Project[]>([]);
+  
+  useEffect(() => {
+    // Parse the markdown files to get the project data
+    const markdownContents = [data1, data2];
+    const parsedProjects = markdownContents.map(content => parseProjectMarkdown(content));
+    
+    // Sort projects by date (most recent first)
+    parsedProjects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    
+    setProjects(parsedProjects);
+  }, []);
 
   return (
     <>
@@ -131,7 +75,7 @@ const ProjectsPage = () => {
                 </CardContent>
                 <CardFooter className="p-6 pt-0 flex justify-between items-center">
                   <Link 
-                    to={`/projects/${project.id}`} 
+                    to={`/projects/${project.slug}`} 
                     className="text-primary hover:underline text-sm font-medium"
                   >
                     View Details

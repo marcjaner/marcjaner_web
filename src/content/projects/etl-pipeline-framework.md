@@ -1,6 +1,7 @@
 
 ---
 id: "2"
+slug: "etl-pipeline-framework"
 title: "ETL Pipeline Framework"
 description: "A modular framework for building efficient ETL pipelines with Python and Apache Airflow."
 featuredImage: "/placeholder.svg"

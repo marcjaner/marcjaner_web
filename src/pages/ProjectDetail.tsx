@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
@@ -13,24 +12,22 @@ import data2 from '@/content/projects/etl-pipeline-framework.md?raw';
 import { parseProjectMarkdown } from '@/lib/markdown';
 
 const ProjectDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const [project, setProject] = useState<Project | null>(null);
   
   useEffect(() => {
     // In a real app, this would fetch the markdown file dynamically
     // For this demo, we're importing them directly
-    const markdownMap: Record<string, string> = {
-      '1': data1,
-      '2': data2,
-    };
+    const markdownContents = [data1, data2];
     
-    const markdownContent = markdownMap[id || ''];
+    // Parse all projects and find the one matching the slug
+    const projects = markdownContents.map(content => parseProjectMarkdown(content));
+    const foundProject = projects.find(p => p.slug === slug);
     
-    if (markdownContent) {
-      const parsedProject = parseProjectMarkdown(markdownContent);
-      setProject(parsedProject);
+    if (foundProject) {
+      setProject(foundProject);
     }
-  }, [id]);
+  }, [slug]);
 
   React.useEffect(() => {
     const cleanup = initScrollReveal();
