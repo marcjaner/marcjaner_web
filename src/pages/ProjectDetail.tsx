@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
@@ -5,12 +6,25 @@ import { Project } from '@/types/collections';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
 import { useToast } from '@/hooks/use-toast';
+import { parseProjectMarkdown } from '@/lib/markdown';
+
+// Import raw markdown content for fallback
+import dataVizProjectContent from '@/content/projects/data-visualization-dashboard.md?raw';
+import etlPipelineContent from '@/content/projects/etl-pipeline-framework.md?raw';
+import automatedMlContent from '@/content/projects/automated-ml-pipeline.md?raw';
 
 const ProjectDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
+  
+  // Map of project slugs to raw content for fallback
+  const projectContentMap: Record<string, string> = {
+    'data-visualization-dashboard': dataVizProjectContent,
+    'etl-pipeline-framework': etlPipelineContent,
+    'automated-ml-pipeline': automatedMlContent,
+  };
   
   useEffect(() => {
     const fetchProject = async () => {
@@ -19,26 +33,52 @@ const ProjectDetail = () => {
       try {
         setLoading(true);
         
-        // Use full URL to Netlify function
-        const functionUrl = '/.netlify/functions/projects';
-        console.log('Fetching project details from:', functionUrl, 'for slug:', slug);
-        
-        // Add a cache-busting parameter to prevent caching
-        const timestamp = new Date().getTime();
-        const response = await fetch(`${functionUrl}?slug=${slug}&_=${timestamp}`);
-        
-        console.log('Response status:', response.status);
-        console.log('Response headers:', Object.fromEntries([...response.headers.entries()]));
-        
-        if (!response.ok) {
-          if (response.status === 404) {
-            throw new Error('Project not found');
+        // First try to get project from Netlify function
+        try {
+          // Use full URL to Netlify function
+          const functionUrl = '/.netlify/functions/projects';
+          console.log('Attempting to fetch project from API:', functionUrl, 'for slug:', slug);
+          
+          // Add a cache-busting parameter to prevent caching
+          const timestamp = new Date().getTime();
+          const response = await fetch(`${functionUrl}?slug=${slug}&_=${timestamp}`);
+          
+          if (response.ok) {
+            const contentType = response.headers.get('content-type');
+            console.log('Response content type:', contentType);
+            
+            if (contentType && contentType.includes('application/json')) {
+              const data = await response.json();
+              console.log('Successfully loaded project from API');
+              setProject(data);
+              return;
+            } else {
+              console.warn('API response is not JSON', contentType);
+              // Continue to fallback
+            }
+          } else {
+            console.warn(`API request failed with status: ${response.status}`);
+            // Continue to fallback
           }
-          throw new Error(`Failed to fetch project details: ${response.status} ${response.statusText}`);
+        } catch (apiError) {
+          console.warn('Error fetching from API, using fallback data:', apiError);
+          // Continue to fallback
         }
         
-        const data = await response.json();
-        setProject(data);
+        // Fallback: Parse markdown file directly if we have it
+        if (projectContentMap[slug]) {
+          console.log('Using fallback: Loading project data from local markdown file');
+          try {
+            const projectData = parseProjectMarkdown(projectContentMap[slug]);
+            setProject(projectData);
+          } catch (parseError) {
+            console.error('Error parsing project markdown:', parseError);
+            throw new Error('Failed to parse project data');
+          }
+        } else {
+          throw new Error('Project not found');
+        }
+        
       } catch (error) {
         console.error("Error loading project:", error);
         toast({
@@ -46,6 +86,7 @@ const ProjectDetail = () => {
           description: error instanceof Error ? error.message : "Failed to load project details",
           variant: "destructive",
         });
+        setProject(null);
       } finally {
         setLoading(false);
       }

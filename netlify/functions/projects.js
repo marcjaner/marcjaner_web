@@ -64,9 +64,14 @@ exports.handler = async (event, context) => {
     };
   }
   
+  console.log('Function triggered at:', new Date().toISOString());
+  console.log('Event HTTP method:', event.httpMethod);
+  console.log('Event path:', event.path);
+  console.log('Event headers:', JSON.stringify(event.headers));
+  
   try {
-    console.log('Function event:', event);
-    console.log('Query parameters:', event.queryStringParameters);
+    console.log('Function event:', JSON.stringify(event));
+    console.log('Query parameters:', JSON.stringify(event.queryStringParameters || {}));
     
     const { slug } = event.queryStringParameters || {};
     
@@ -99,10 +104,25 @@ exports.handler = async (event, context) => {
       }
       
       console.log('Found project:', project.title);
+      
+      // Test that the response is valid JSON
+      const responseBody = JSON.stringify(project);
+      try {
+        // Verify we can parse the stringified output
+        JSON.parse(responseBody);
+      } catch (jsonError) {
+        console.error('Error creating JSON response:', jsonError);
+        return {
+          statusCode: 500,
+          headers,
+          body: JSON.stringify({ error: 'Failed to generate valid JSON' }),
+        };
+      }
+      
       return {
         statusCode: 200,
         headers,
-        body: JSON.stringify(project),
+        body: responseBody,
       };
     }
     
@@ -129,10 +149,25 @@ exports.handler = async (event, context) => {
       });
     
     console.log(`Found ${projects.length} projects`);
+    
+    // Test that the response is valid JSON
+    const responseBody = JSON.stringify(projects);
+    try {
+      // Verify we can parse the stringified output
+      JSON.parse(responseBody);
+    } catch (jsonError) {
+      console.error('Error creating JSON response:', jsonError);
+      return {
+        statusCode: 500,
+        headers,
+        body: JSON.stringify({ error: 'Failed to generate valid JSON' }),
+      };
+    }
+    
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(projects),
+      body: responseBody,
     };
   } catch (error) {
     console.error('Error in projects function:', error);
@@ -140,7 +175,11 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'Failed to load projects', message: error.message }),
+      body: JSON.stringify({ 
+        error: 'Failed to load projects',
+        message: error.message,
+        stack: error.stack
+      }),
     };
   }
 };

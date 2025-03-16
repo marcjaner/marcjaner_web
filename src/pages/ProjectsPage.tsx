@@ -1,9 +1,16 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, Github } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Project } from '@/types/collections';
 import { useToast } from '@/hooks/use-toast';
+import { parseProjectMarkdown } from '@/lib/markdown';
+
+// Fallback project data
+import dataVizProjectContent from '@/content/projects/data-visualization-dashboard.md?raw';
+import etlPipelineContent from '@/content/projects/etl-pipeline-framework.md?raw';
+import automatedMlContent from '@/content/projects/automated-ml-pipeline.md?raw';
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -15,23 +22,57 @@ const ProjectsPage = () => {
       try {
         setLoading(true);
         
-        // Use full URL to Netlify function
-        const functionUrl = '/.netlify/functions/projects';
-        console.log('Fetching projects from:', functionUrl);
-        
-        // Add a cache-busting parameter to prevent caching
-        const timestamp = new Date().getTime();
-        const response = await fetch(`${functionUrl}?_=${timestamp}`);
-        
-        console.log('Response status:', response.status);
-        console.log('Response headers:', Object.fromEntries([...response.headers.entries()]));
-        
-        if (!response.ok) {
-          throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
+        // First try to get projects from Netlify function
+        try {
+          // Use full URL to Netlify function
+          const functionUrl = '/.netlify/functions/projects';
+          console.log('Attempting to fetch projects from API:', functionUrl);
+          
+          // Add a cache-busting parameter to prevent caching
+          const timestamp = new Date().getTime();
+          const response = await fetch(`${functionUrl}?_=${timestamp}`);
+          
+          if (response.ok) {
+            const contentType = response.headers.get('content-type');
+            console.log('Response content type:', contentType);
+            
+            if (contentType && contentType.includes('application/json')) {
+              const data = await response.json();
+              console.log('Successfully loaded projects from API');
+              setProjects(data);
+              return;
+            } else {
+              console.warn('API response is not JSON', contentType);
+              // Continue to fallback
+            }
+          } else {
+            console.warn(`API request failed with status: ${response.status}`);
+            // Continue to fallback
+          }
+        } catch (apiError) {
+          console.warn('Error fetching from API, using fallback data:', apiError);
+          // Continue to fallback
         }
         
-        const data = await response.json();
-        setProjects(data);
+        // Fallback: Parse markdown files directly
+        console.log('Using fallback: Loading project data from local markdown files');
+        const projectFiles = [
+          dataVizProjectContent,
+          etlPipelineContent,
+          automatedMlContent
+        ];
+        
+        const parsedProjects = projectFiles.map(fileContent => {
+          try {
+            return parseProjectMarkdown(fileContent);
+          } catch (error) {
+            console.error('Error parsing project markdown:', error);
+            return null;
+          }
+        }).filter(Boolean) as Project[];
+        
+        setProjects(parsedProjects);
+        
       } catch (error) {
         console.error("Error loading projects:", error);
         toast({
@@ -72,7 +113,7 @@ const ProjectsPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {projects.map((project, index) => (
                 <Card 
-                  key={project.id} 
+                  key={project.id || index} 
                   className={`overflow-hidden hover:shadow-lg transition-shadow reveal ${index < 3 ? `stagger-${index + 1}` : ''}`}
                 >
                   <div className="aspect-video bg-muted">
