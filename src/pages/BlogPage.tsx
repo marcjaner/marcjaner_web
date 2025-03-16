@@ -11,20 +11,41 @@ import airflowPost from '@/content/blog/airflow-etl-pipelines.md?raw';
 const BlogPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     try {
+      console.log("Loading blog markdown files...");
+      
       // Parse the markdown files to get the blog data
       const markdownContents = [airflowPost];
-      const parsedPosts = markdownContents.map(content => parseBlogMarkdown(content));
+      const parsedPosts: BlogPost[] = [];
       
-      // Sort posts by date (most recent first)
-      parsedPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      for (const content of markdownContents) {
+        try {
+          const post = parseBlogMarkdown(content);
+          console.log("Parsed blog post:", post);
+          parsedPosts.push(post);
+        } catch (err) {
+          console.error("Error parsing individual blog post:", err);
+        }
+      }
       
-      setPosts(parsedPosts);
+      if (parsedPosts.length === 0) {
+        setError("No blog posts could be loaded");
+      } else {
+        // Sort posts by date (most recent first)
+        parsedPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setPosts(parsedPosts);
+        setError(null);
+      }
     } catch (error) {
       console.error("Error parsing blog markdown:", error);
+      setError("Failed to load blog posts");
       setPosts([]);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -34,6 +55,46 @@ const BlogPage = () => {
   );
 
   const allTags = Array.from(new Set(posts.flatMap(post => post.tags)));
+
+  if (loading) {
+    return (
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl font-bold mb-6">Loading Posts...</h1>
+            <div className="space-y-12">
+              {[1, 2, 3].map((n) => (
+                <div key={n} className="flex flex-col md:flex-row gap-8 animate-pulse">
+                  <div className="md:w-1/3">
+                    <div className="aspect-[4/3] bg-muted rounded-xl"></div>
+                  </div>
+                  <div className="md:w-2/3">
+                    <div className="h-6 bg-muted rounded w-3/4 mb-4"></div>
+                    <div className="h-4 bg-muted rounded mb-2"></div>
+                    <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
+                    <div className="h-4 bg-muted rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl font-bold mb-6">Something went wrong</h1>
+            <p className="text-muted-foreground mb-8">{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>

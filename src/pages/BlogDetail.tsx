@@ -14,22 +14,43 @@ const BlogDetail = () => {
   const navigate = useNavigate();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
-      // This would eventually pull from a collection or API, but for now we're using the one post
-      const posts = [airflowPost].map(content => parseBlogMarkdown(content));
+      console.log("Loading blog post with slug:", slug);
       
-      const foundPost = posts.find(p => p.slug === slug);
+      // This would eventually pull from a collection or API, but for now we're using a hard-coded list
+      const markdownContents = [airflowPost];
+      const parsedPosts: BlogPost[] = [];
+      
+      for (const content of markdownContents) {
+        try {
+          const post = parseBlogMarkdown(content);
+          console.log("Parsed blog post:", post);
+          parsedPosts.push(post);
+        } catch (err) {
+          console.error("Error parsing individual blog post:", err);
+        }
+      }
+      
+      const foundPost = parsedPosts.find(p => p.slug === slug);
       
       if (foundPost) {
+        console.log("Found matching post:", foundPost);
         setPost(foundPost);
+        setError(null);
       } else {
-        // If post not found, redirect to blog listing
-        navigate('/blog', { replace: true });
+        console.error("No post found with slug:", slug);
+        setError("Blog post not found");
+        // If post not found, redirect to blog listing after a short delay
+        setTimeout(() => {
+          navigate('/blog', { replace: true });
+        }, 3000);
       }
     } catch (error) {
       console.error("Error loading blog post:", error);
+      setError("Failed to load blog post");
     } finally {
       setLoading(false);
     }
@@ -49,6 +70,20 @@ const BlogDetail = () => {
               <div className="h-4 bg-muted rounded w-5/6"></div>
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-6 py-20">
+        <div className="max-w-3xl mx-auto text-center">
+          <h1 className="text-3xl font-bold mb-4">Error Loading Post</h1>
+          <p className="text-muted-foreground mb-6">
+            {error}
+          </p>
+          <p className="text-sm">Redirecting to blog page...</p>
         </div>
       </div>
     );

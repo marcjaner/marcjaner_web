@@ -12,22 +12,82 @@ import { parseProjectMarkdown } from '@/lib/markdown';
 
 const ProjectsPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     try {
+      console.log("Loading project markdown files...");
+      
       // Parse the markdown files to get the project data
       const markdownContents = [data1, data2];
-      const parsedProjects = markdownContents.map(content => parseProjectMarkdown(content));
+      const parsedProjects: Project[] = [];
       
-      // Sort projects by date (most recent first)
-      parsedProjects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      for (const content of markdownContents) {
+        try {
+          const project = parseProjectMarkdown(content);
+          console.log("Parsed project:", project);
+          parsedProjects.push(project);
+        } catch (err) {
+          console.error("Error parsing individual project:", err);
+        }
+      }
       
-      setProjects(parsedProjects);
+      if (parsedProjects.length === 0) {
+        setError("No projects could be loaded");
+      } else {
+        // Sort projects by date (most recent first)
+        parsedProjects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setProjects(parsedProjects);
+        setError(null);
+      }
     } catch (error) {
       console.error("Error parsing project markdown:", error);
+      setError("Failed to load projects");
       setProjects([]);
+    } finally {
+      setLoading(false);
     }
   }, []);
+
+  if (loading) {
+    return (
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl font-bold mb-6">Loading Projects...</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3].map((n) => (
+                <Card key={n} className="overflow-hidden animate-pulse">
+                  <div className="aspect-video bg-muted"></div>
+                  <CardHeader className="p-6">
+                    <div className="h-6 bg-muted rounded w-3/4"></div>
+                  </CardHeader>
+                  <CardContent className="p-6 pt-2">
+                    <div className="h-4 bg-muted rounded mb-2"></div>
+                    <div className="h-4 bg-muted rounded w-3/4"></div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl font-bold mb-6">Something went wrong</h1>
+            <p className="text-muted-foreground mb-8">{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>
