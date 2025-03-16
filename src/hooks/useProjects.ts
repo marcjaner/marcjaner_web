@@ -15,6 +15,11 @@ const projectFiles = [
   automatedMlContent
 ];
 
+// Parse all local project files
+const getLocalProjects = (): Project[] => {
+  return projectFiles.map(content => parseProjectMarkdown(content));
+};
+
 export function useProjects() {
   return useQuery({
     queryKey: ['projects'],
@@ -23,20 +28,24 @@ export function useProjects() {
         // Try to fetch from API
         const response = await fetch('/.netlify/functions/projects');
         
-        if (response.ok) {
-          return await response.json();
+        if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            return data;
+          }
+          // If data is not an array, fall back to local files
+          console.log('API returned non-array data, using local files');
         }
         
-        // Fallback to local files if API fails
-        console.log('API request failed, using local files');
-        return projectFiles
-          .map(content => parseProjectMarkdown(content));
+        // Fallback to local files
+        console.log('Using local project files');
+        return getLocalProjects();
       } catch (error) {
         console.error('Error fetching projects:', error);
         
         // Fallback to local files
-        return projectFiles
-          .map(content => parseProjectMarkdown(content));
+        console.log('Error caught, using local project files');
+        return getLocalProjects();
       }
     }
   });
@@ -49,39 +58,39 @@ export function useProject(slug: string | undefined) {
       if (!slug) return null;
       
       try {
-        // Try to fetch from API
-        const response = await fetch(`/.netlify/functions/projects?slug=${slug}`);
+        // First try local files for immediate response
+        const allFiles = {
+          'data-visualization-dashboard': dataVizProjectContent,
+          'etl-pipeline-framework': etlPipelineContent,
+          'automated-ml-pipeline': automatedMlContent,
+        };
         
-        if (response.ok) {
-          return await response.json();
+        // First check if we have this slug in our local files
+        if (slug in allFiles || slug === '1') {
+          const fileSlug = slug === '1' ? 'data-visualization-dashboard' : slug;
+          const content = allFiles[fileSlug as keyof typeof allFiles];
+          if (content) {
+            console.log(`Loading project from local file: ${fileSlug}`);
+            return parseProjectMarkdown(content);
+          }
         }
         
-        // Fallback to local files if API fails
-        console.log('API request failed, using local files');
-        const allFiles = {
-          'data-visualization-dashboard': dataVizProjectContent,
-          'etl-pipeline-framework': etlPipelineContent,
-          'automated-ml-pipeline': automatedMlContent,
-        };
+        // Try to fetch from API as fallback
+        try {
+          const response = await fetch(`/.netlify/functions/projects?slug=${slug}`);
+          
+          if (response.ok && response.headers.get('content-type')?.includes('application/json')) {
+            return await response.json();
+          }
+        } catch (apiError) {
+          console.log('API fetch failed, already using local files');
+        }
         
-        const content = allFiles[slug as keyof typeof allFiles];
-        if (!content) return null;
-        
-        return parseProjectMarkdown(content);
+        // If we got here and still don't have data, return null
+        return null;
       } catch (error) {
         console.error('Error fetching project:', error);
-        
-        // Fallback to local files
-        const allFiles = {
-          'data-visualization-dashboard': dataVizProjectContent,
-          'etl-pipeline-framework': etlPipelineContent,
-          'automated-ml-pipeline': automatedMlContent,
-        };
-        
-        const content = allFiles[slug as keyof typeof allFiles];
-        if (!content) return null;
-        
-        return parseProjectMarkdown(content);
+        return null;
       }
     },
     enabled: !!slug
