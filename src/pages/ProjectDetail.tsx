@@ -20,9 +20,16 @@ const ProjectDetail = () => {
       try {
         setLoading(true);
         
+        // Use full URL to Netlify function
+        const functionUrl = '/.netlify/functions/projects';
+        console.log('Fetching project details from:', functionUrl, 'for slug:', slug);
+        
         // Add a cache-busting parameter to prevent caching
         const timestamp = new Date().getTime();
-        const response = await fetch(`/.netlify/functions/projects?slug=${slug}&_=${timestamp}`);
+        const response = await fetch(`${functionUrl}?slug=${slug}&_=${timestamp}`);
+        
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries([...response.headers.entries()]));
         
         if (!response.ok) {
           if (response.status === 404) {
@@ -31,7 +38,19 @@ const ProjectDetail = () => {
           throw new Error(`Failed to fetch project details: ${response.status} ${response.statusText}`);
         }
         
-        const data = await response.json();
+        // Get response as text first to debug if needed
+        const responseText = await response.text();
+        console.log('Response text preview:', responseText.substring(0, 200));
+        
+        // Try to parse the response as JSON
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (error) {
+          console.error('JSON parse error:', error);
+          throw new Error(`Failed to parse response as JSON: ${error.message}`);
+        }
+        
         setProject(data);
       } catch (error) {
         console.error("Error loading project:", error);
