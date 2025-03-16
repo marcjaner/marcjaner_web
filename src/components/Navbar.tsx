@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +27,11 @@ export const Navbar = () => {
     document.body.style.overflow = isOpen ? 'auto' : 'hidden';
   };
 
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    if (isOpen) toggleNav();
+  };
+
   return (
     <header 
       className={cn(
@@ -35,34 +41,45 @@ export const Navbar = () => {
     >
       <div className="container mx-auto px-6">
         <nav className="flex items-center justify-between">
-          <Link 
-            to="/" 
-            className="text-xl font-semibold tracking-tight"
-            onClick={() => isOpen && toggleNav()}
+          <button 
+            onClick={() => handleNavigation('/')}
+            className="text-xl font-semibold tracking-tight cursor-pointer"
           >
             Marc Janer
-          </Link>
+          </button>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <Link to="/" className="link-underline font-medium text-foreground/80 hover:text-foreground">
+            <button 
+              onClick={() => handleNavigation('/')} 
+              className="link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer"
+            >
               Home
-            </Link>
-            <Link to="/projects" className="link-underline font-medium text-foreground/80 hover:text-foreground">
+            </button>
+            <button 
+              onClick={() => handleNavigation('/projects')} 
+              className="link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer"
+            >
               Projects
-            </Link>
-            <Link to="/blog" className="link-underline font-medium text-foreground/80 hover:text-foreground">
+            </button>
+            <button 
+              onClick={() => handleNavigation('/blog')} 
+              className="link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer"
+            >
               Blog
-            </Link>
-            <Link to="/contact" className="link-underline font-medium text-foreground/80 hover:text-foreground">
+            </button>
+            <button 
+              onClick={() => handleNavigation('/contact')} 
+              className="link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer"
+            >
               Contact
-            </Link>
-            <Link 
-              to="/newsletter" 
-              className="bg-primary text-primary-foreground py-2 px-4 rounded-md transition-colors hover:bg-primary/90"
+            </button>
+            <button 
+              onClick={() => handleNavigation('/newsletter')} 
+              className="bg-primary text-primary-foreground py-2 px-4 rounded-md transition-colors hover:bg-primary/90 cursor-pointer"
             >
               Newsletter
-            </Link>
+            </button>
             <ThemeToggle />
           </div>
 
@@ -89,41 +106,36 @@ export const Navbar = () => {
           )}
         >
           <div className="flex flex-col items-center gap-8 p-8">
-            <Link 
-              to="/" 
-              className="text-2xl font-medium"
-              onClick={toggleNav}
+            <button 
+              onClick={() => handleNavigation('/')} 
+              className="text-2xl font-medium cursor-pointer"
             >
               Home
-            </Link>
-            <Link 
-              to="/projects" 
-              className="text-2xl font-medium"
-              onClick={toggleNav}
+            </button>
+            <button 
+              onClick={() => handleNavigation('/projects')} 
+              className="text-2xl font-medium cursor-pointer"
             >
               Projects
-            </Link>
-            <Link 
-              to="/blog" 
-              className="text-2xl font-medium"
-              onClick={toggleNav}
+            </button>
+            <button 
+              onClick={() => handleNavigation('/blog')} 
+              className="text-2xl font-medium cursor-pointer"
             >
               Blog
-            </Link>
-            <Link 
-              to="/contact" 
-              className="text-2xl font-medium"
-              onClick={toggleNav}
+            </button>
+            <button 
+              onClick={() => handleNavigation('/contact')} 
+              className="text-2xl font-medium cursor-pointer"
             >
               Contact
-            </Link>
-            <Link 
-              to="/newsletter" 
-              className="bg-primary text-primary-foreground py-3 px-6 rounded-md w-full text-center text-xl"
-              onClick={toggleNav}
+            </button>
+            <button 
+              onClick={() => handleNavigation('/newsletter')} 
+              className="bg-primary text-primary-foreground py-3 px-6 rounded-md w-full text-center text-xl cursor-pointer"
             >
               Newsletter
-            </Link>
+            </button>
           </div>
         </div>
       )}
