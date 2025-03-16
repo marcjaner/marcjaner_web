@@ -1,18 +1,51 @@
 
 import React, { useState } from 'react';
 import { Mail, Check } from 'lucide-react';
+import { toast } from "@/hooks/use-toast";
 
 const NewsletterPage = () => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
-    // Here you would typically integrate with a newsletter service
-    // For now, we'll just simulate a successful subscription
-    setSubmitted(true);
-    setEmail('');
+    try {
+      const response = await fetch('/.netlify/functions/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email,
+          formType: 'newsletter'
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setSubmitted(true);
+        setEmail('');
+        toast({
+          title: "Success!",
+          description: data.message || "Thank you for subscribing to the newsletter!",
+        });
+      } else {
+        throw new Error(data.error || 'Something went wrong');
+      }
+    } catch (error) {
+      console.error('Error submitting newsletter form:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to subscribe. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -52,9 +85,10 @@ const NewsletterPage = () => {
                       </div>
                       <button
                         type="submit"
-                        className="bg-primary text-primary-foreground px-6 py-3 rounded-r-md font-medium hover:bg-primary/90 transition-colors"
+                        disabled={isSubmitting}
+                        className="bg-primary text-primary-foreground px-6 py-3 rounded-r-md font-medium hover:bg-primary/90 transition-colors disabled:opacity-70"
                       >
-                        Subscribe
+                        {isSubmitting ? 'Subscribing...' : 'Subscribe'}
                       </button>
                     </div>
                   </div>

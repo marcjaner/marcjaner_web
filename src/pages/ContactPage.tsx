@@ -33,16 +33,19 @@ const ContactPage = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          ...formData,
+          formType: 'contact'
+        })
       });
       
-      const text = await res.text();
+      const data = await res.json();
       
       if (res.status === 200) {
         setStatus({
           submitted: true,
           submitting: false,
-          info: { error: false, msg: 'Message sent successfully!' }
+          info: { error: false, msg: data.message || 'Message sent successfully!' }
         });
         setFormData({
           name: '',
@@ -54,7 +57,7 @@ const ContactPage = () => {
         setStatus({
           submitted: false,
           submitting: false,
-          info: { error: true, msg: text || 'Something went wrong. Please try again later.' }
+          info: { error: true, msg: data.error || 'Something went wrong. Please try again later.' }
         });
       }
     } catch (error) {
