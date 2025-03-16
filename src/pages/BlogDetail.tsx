@@ -28,7 +28,9 @@ const BlogDetail = () => {
         try {
           const post = parseBlogMarkdown(content);
           console.log("Parsed blog post:", post);
-          parsedPosts.push(post);
+          if (post && post.id) {
+            parsedPosts.push(post);
+          }
         } catch (err) {
           console.error("Error parsing individual blog post:", err);
         }

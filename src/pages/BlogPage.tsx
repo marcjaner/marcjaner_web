@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Calendar, Clock, Tag } from 'lucide-react';
@@ -25,26 +26,29 @@ const BlogPage = () => {
         try {
           const post = parseBlogMarkdown(content);
           console.log("Parsed blog post:", post);
-          parsedPosts.push(post);
+          if (post && post.id) {
+            parsedPosts.push(post);
+          }
         } catch (err) {
           console.error("Error parsing individual blog post:", err);
         }
       }
       
       if (parsedPosts.length === 0) {
+        console.error("No blog posts could be loaded");
         setError("No blog posts could be loaded");
       } else {
         // Sort posts by date (most recent first)
         parsedPosts.sort((a, b) => {
-          const dateA = new Date(a.date).getTime();
-          const dateB = new Date(b.date).getTime();
-          return dateB - dateA;
+          if (!a.date || !b.date) return 0;
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
         });
+        console.log("Final parsed posts:", parsedPosts);
         setPosts(parsedPosts);
         setError(null);
       }
     } catch (error) {
-      console.error("Error parsing blog markdown:", error);
+      console.error("Error loading blog posts:", error);
       setError("Failed to load blog posts");
       setPosts([]);
     } finally {
