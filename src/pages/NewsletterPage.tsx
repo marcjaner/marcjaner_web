@@ -61,7 +61,7 @@ const NewsletterPage = () => {
               </p>
             </div>
             
-            <div className="bg-gradient-to-b from-aquamarine-50 to-aquamarine-100 dark:from-aquamarine-900/70 dark:to-aquamarine-950/70 backdrop-blur-sm border border-aquamarine-200 dark:border-aquamarine-800/30 rounded-2xl p-8 shadow-sm accent-glow reveal stagger-1">
+            <div className="glass-panel rounded-2xl p-8 shadow-sm accent-glow reveal stagger-1">
               {!submitted ? (
                 <form onSubmit={handleSubmit}>
                   <div className="mb-6">
@@ -71,14 +71,14 @@ const NewsletterPage = () => {
                     <div className="flex">
                       <div className="relative flex-grow">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                          <Mail className="text-aquamarine-600 dark:text-aquamarine-400" size={18} />
+                          <Mail className="text-aquamarine-400" size={18} />
                         </div>
                         <input
                           type="email"
                           id="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-white/70 dark:bg-aquamarine-950/30 border border-aquamarine-300 dark:border-aquamarine-700/50 rounded-l-md pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-aquamarine-400/30"
+                          className="w-full bg-black/50 border border-aquamarine-700/30 rounded-l-md pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-aquamarine-500/30"
                           placeholder="your@email.com"
                           required
                         />
@@ -86,7 +86,7 @@ const NewsletterPage = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-aquamarine-500 text-white px-6 py-3 rounded-r-md font-medium hover:bg-aquamarine-600 transition-colors disabled:opacity-70"
+                        className="bg-aquamarine-500 text-black font-medium px-6 py-3 rounded-r-md hover:bg-aquamarine-400 transition-colors disabled:opacity-70"
                       >
                         {isSubmitting ? 'Subscribing...' : 'Subscribe'}
                       </button>
@@ -99,19 +99,19 @@ const NewsletterPage = () => {
                     </p>
                     <ul className="mt-2 space-y-2">
                       <li className="flex items-center gap-2">
-                        <Check size={16} className="text-aquamarine-600 dark:text-aquamarine-400" />
+                        <Check size={16} className="text-aquamarine-400" />
                         <span>New projects and case studies</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Check size={16} className="text-aquamarine-600 dark:text-aquamarine-400" />
+                        <Check size={16} className="text-aquamarine-400" />
                         <span>Data engineering tutorials and guides</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Check size={16} className="text-aquamarine-600 dark:text-aquamarine-400" />
+                        <Check size={16} className="text-aquamarine-400" />
                         <span>Software development insights</span>
                       </li>
                       <li className="flex items-center gap-2">
-                        <Check size={16} className="text-aquamarine-600 dark:text-aquamarine-400" />
+                        <Check size={16} className="text-aquamarine-400" />
                         <span>Resources I find useful</span>
                       </li>
                     </ul>
@@ -119,8 +119,8 @@ const NewsletterPage = () => {
                 </form>
               ) : (
                 <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-aquamarine-500/10 dark:bg-aquamarine-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Check size={32} className="text-aquamarine-600 dark:text-aquamarine-400" />
+                  <div className="w-16 h-16 bg-aquamarine-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Check size={32} className="text-aquamarine-400" />
                   </div>
                   <h3 className="text-2xl font-bold mb-4">Thank you for subscribing!</h3>
                   <p className="text-muted-foreground">
