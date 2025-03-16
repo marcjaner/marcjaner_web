@@ -31,20 +31,7 @@ const ProjectDetail = () => {
           throw new Error(`Failed to fetch project details: ${response.status} ${response.statusText}`);
         }
         
-        // Log the response text for debugging
-        const responseText = await response.text();
-        console.log('API Response (ProjectDetail):', responseText);
-        
-        // Try to parse the response as JSON
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error('Failed to parse response as JSON:', parseError);
-          console.error('Response text:', responseText);
-          throw new Error('Invalid JSON response from server');
-        }
-        
+        const data = await response.json();
         setProject(data);
       } catch (error) {
         console.error("Error loading project:", error);

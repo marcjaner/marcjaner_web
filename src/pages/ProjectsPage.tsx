@@ -24,20 +24,7 @@ const ProjectsPage = () => {
           throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
         }
         
-        // Log the response text for debugging
-        const responseText = await response.text();
-        console.log('API Response:', responseText);
-        
-        // Try to parse the response as JSON
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (parseError) {
-          console.error('Failed to parse response as JSON:', parseError);
-          console.error('Response text:', responseText);
-          throw new Error('Invalid JSON response from server');
-        }
-        
+        const data = await response.json();
         setProjects(data);
       } catch (error) {
         console.error("Error loading projects:", error);

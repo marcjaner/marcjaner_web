@@ -53,6 +53,9 @@ exports.handler = async (event) => {
   }
   
   try {
+    // Log the event for debugging
+    console.log('Function event:', event);
+    
     const { slug } = event.queryStringParameters || {};
     
     // If slug is provided, return a single project
