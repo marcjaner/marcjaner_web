@@ -57,6 +57,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Custom subtle colors
+        subtle: {
+          blue: "#D3E4FD",
+          green: "#F2FCE2",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -106,6 +111,10 @@ export default {
       fontFamily: {
         sans: ["SF Pro Display", "system-ui", "sans-serif"],
         mono: ["SF Mono", "monospace"],
+      },
+      backgroundImage: {
+        "gradient-subtle": "linear-gradient(109.6deg, rgba(223,234,247,1) 11.2%, rgba(244,248,252,1) 91.1%)",
+        "gradient-subtle-dark": "linear-gradient(to right, #243949 0%, #517fa4 100%)",
       },
     },
   },

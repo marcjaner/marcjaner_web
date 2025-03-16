@@ -54,14 +54,14 @@ const NewsletterPage = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-12 reveal">
-              <h1 className="text-4xl font-bold mb-6">Subscribe to my Newsletter</h1>
+              <h1 className="text-4xl font-bold mb-6 text-foreground/90">Subscribe to my Newsletter</h1>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                 Stay up to date with my latest projects, blog posts, and insights on data engineering,
                 software development, and more.
               </p>
             </div>
             
-            <div className="bg-card border border-border rounded-2xl p-8 reveal stagger-1">
+            <div className="bg-card border border-border rounded-2xl p-8 shadow-sm accent-border accent-glow reveal stagger-1">
               {!submitted ? (
                 <form onSubmit={handleSubmit}>
                   <div className="mb-6">
@@ -71,7 +71,7 @@ const NewsletterPage = () => {
                     <div className="flex">
                       <div className="relative flex-grow">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                          <Mail className="text-muted-foreground" size={18} />
+                          <Mail className="text-primary" size={18} />
                         </div>
                         <input
                           type="email"
@@ -119,8 +119,8 @@ const NewsletterPage = () => {
                 </form>
               ) : (
                 <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Check size={32} className="text-green-600 dark:text-green-400" />
+                  <div className="w-16 h-16 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Check size={32} className="text-primary" />
                   </div>
                   <h3 className="text-2xl font-bold mb-4">Thank you for subscribing!</h3>
                   <p className="text-muted-foreground">

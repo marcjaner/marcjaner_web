@@ -39,7 +39,7 @@ export const Navbar = () => {
     <header 
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled ? "py-3 glass-panel" : "py-5 bg-transparent"
+        scrolled ? "py-3 glass-panel accent-glow" : "py-5 bg-transparent"
       )}
     >
       <div className="container mx-auto px-6">
