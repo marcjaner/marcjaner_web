@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Calendar, Clock, Tag } from 'lucide-react';
@@ -36,7 +35,11 @@ const BlogPage = () => {
         setError("No blog posts could be loaded");
       } else {
         // Sort posts by date (most recent first)
-        parsedPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        parsedPosts.sort((a, b) => {
+          const dateA = new Date(a.date).getTime();
+          const dateB = new Date(b.date).getTime();
+          return dateB - dateA;
+        });
         setPosts(parsedPosts);
         setError(null);
       }
@@ -51,10 +54,10 @@ const BlogPage = () => {
 
   const filteredPosts = posts.filter(post => 
     post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+    (post.tags && post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())))
   );
 
-  const allTags = Array.from(new Set(posts.flatMap(post => post.tags)));
+  const allTags = Array.from(new Set(posts.flatMap(post => post.tags || [])));
 
   if (loading) {
     return (
@@ -175,7 +178,7 @@ const BlogPage = () => {
                     </div>
                     <div className="md:w-2/3">
                       <div className="flex flex-wrap gap-2 mb-3">
-                        {post.tags.map((tag, i) => (
+                        {post.tags && post.tags.map((tag, i) => (
                           <span 
                             key={i} 
                             className="inline-flex items-center gap-1 text-xs font-medium bg-secondary px-2 py-1 rounded"

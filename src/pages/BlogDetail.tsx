@@ -108,7 +108,7 @@ const BlogDetail = () => {
         <article className="max-w-3xl mx-auto">
           <header className="mb-10">
             <div className="flex flex-wrap gap-2 mb-4">
-              {post.tags.map((tag, i) => (
+              {post?.tags && post.tags.map((tag, i) => (
                 <span 
                   key={i} 
                   className="inline-flex items-center gap-1 text-xs font-medium bg-secondary px-2 py-1 rounded"
@@ -117,20 +117,20 @@ const BlogDetail = () => {
                 </span>
               ))}
             </div>
-            <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-            <p className="text-xl text-muted-foreground mb-6">{post.excerpt}</p>
+            <h1 className="text-4xl font-bold mb-4">{post?.title}</h1>
+            <p className="text-xl text-muted-foreground mb-6">{post?.excerpt}</p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
               <div className="flex items-center gap-1">
-                <Calendar size={14} /> {post.date}
+                <Calendar size={14} /> {post?.date}
               </div>
               <div className="flex items-center gap-1">
-                <Clock size={14} /> {post.readTime}
+                <Clock size={14} /> {post?.readTime}
               </div>
             </div>
             <div className="aspect-video rounded-xl overflow-hidden bg-muted mb-8">
               <img 
-                src={post.featuredImage} 
-                alt={post.title}
+                src={post?.featuredImage} 
+                alt={post?.title}
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
@@ -141,7 +141,7 @@ const BlogDetail = () => {
           </header>
           
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            <ReactMarkdown>{post.content}</ReactMarkdown>
+            {post?.content && <ReactMarkdown>{post.content}</ReactMarkdown>}
           </div>
         </article>
       </div>

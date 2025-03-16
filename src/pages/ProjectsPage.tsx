@@ -37,7 +37,11 @@ const ProjectsPage = () => {
         setError("No projects could be loaded");
       } else {
         // Sort projects by date (most recent first)
-        parsedProjects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        parsedProjects.sort((a, b) => {
+          const dateA = new Date(a.date).getTime();
+          const dateB = new Date(b.date).getTime();
+          return dateB - dateA;
+        });
         setProjects(parsedProjects);
         setError(null);
       }
@@ -122,7 +126,7 @@ const ProjectsPage = () => {
                 </div>
                 <CardHeader className="p-6 pb-2">
                   <div className="mb-2 flex flex-wrap gap-2">
-                    {project.technologies.map((tech, i) => (
+                    {project.technologies && project.technologies.map((tech, i) => (
                       <span 
                         key={i} 
                         className="text-xs font-medium bg-secondary px-2 py-1 rounded"

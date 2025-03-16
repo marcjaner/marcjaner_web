@@ -38,10 +38,13 @@ export function parseMarkdown(content: string) {
         const keyVal = line.split(':');
         if (keyVal.length >= 2) {
           const key = keyVal[0].trim();
+          // Join back any colons in the value (e.g., for URLs)
           const value = keyVal.slice(1).join(':').trim();
           
-          // Convert values to appropriate types
-          if (value === 'true') {
+          // Remove quotes from string values
+          if (value.startsWith('"') && value.endsWith('"')) {
+            frontMatter[key] = value.slice(1, -1);
+          } else if (value === 'true') {
             frontMatter[key] = true;
           } else if (value === 'false') {
             frontMatter[key] = false;
@@ -68,23 +71,22 @@ export function parseMarkdown(content: string) {
 export function parseProjectMarkdown(content: string): Project {
   try {
     const { frontMatter, content: markdownContent } = parseMarkdown(content);
-    console.log("Project frontMatter:", frontMatter);
     
     // Ensure slug is defined, fallback to id if not provided
-    const slug = frontMatter.slug || frontMatter.id as string;
+    const slug = frontMatter.slug || frontMatter.id;
     
     return {
-      id: frontMatter.id as string,
+      id: frontMatter.id,
       slug: slug,
-      title: frontMatter.title as string,
-      description: frontMatter.description as string,
+      title: frontMatter.title,
+      description: frontMatter.description,
       content: markdownContent,
-      featuredImage: frontMatter.featuredImage as string,
-      technologies: frontMatter.technologies as string[],
-      githubUrl: frontMatter.githubUrl as string | undefined,
-      liveUrl: frontMatter.liveUrl as string | undefined,
+      featuredImage: frontMatter.featuredImage,
+      technologies: frontMatter.technologies || [],
+      githubUrl: frontMatter.githubUrl,
+      liveUrl: frontMatter.liveUrl,
       featured: Boolean(frontMatter.featured),
-      date: frontMatter.date as string,
+      date: frontMatter.date,
     };
   } catch (error) {
     console.error("Error parsing project markdown:", error);
@@ -96,22 +98,21 @@ export function parseProjectMarkdown(content: string): Project {
 export function parseBlogMarkdown(content: string): BlogPost {
   try {
     const { frontMatter, content: markdownContent } = parseMarkdown(content);
-    console.log("Blog frontMatter:", frontMatter);
     
     // Ensure slug is defined, fallback to id if not provided
-    const slug = frontMatter.slug || frontMatter.id as string;
+    const slug = frontMatter.slug || frontMatter.id;
     
     return {
-      id: frontMatter.id as string,
+      id: frontMatter.id,
       slug: slug,
-      title: frontMatter.title as string,
-      excerpt: frontMatter.excerpt as string,
+      title: frontMatter.title,
+      excerpt: frontMatter.excerpt,
       content: markdownContent,
-      featuredImage: frontMatter.featuredImage as string,
-      author: frontMatter.author as string,
-      date: frontMatter.date as string,
-      readTime: frontMatter.readTime as string,
-      tags: frontMatter.tags as string[],
+      featuredImage: frontMatter.featuredImage,
+      author: frontMatter.author,
+      date: frontMatter.date,
+      readTime: frontMatter.readTime,
+      tags: frontMatter.tags || [],
       featured: Boolean(frontMatter.featured),
     };
   } catch (error) {
