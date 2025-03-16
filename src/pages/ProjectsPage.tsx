@@ -14,14 +14,19 @@ const ProjectsPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   
   useEffect(() => {
-    // Parse the markdown files to get the project data
-    const markdownContents = [data1, data2];
-    const parsedProjects = markdownContents.map(content => parseProjectMarkdown(content));
-    
-    // Sort projects by date (most recent first)
-    parsedProjects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    
-    setProjects(parsedProjects);
+    try {
+      // Parse the markdown files to get the project data
+      const markdownContents = [data1, data2];
+      const parsedProjects = markdownContents.map(content => parseProjectMarkdown(content));
+      
+      // Sort projects by date (most recent first)
+      parsedProjects.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      
+      setProjects(parsedProjects);
+    } catch (error) {
+      console.error("Error parsing project markdown:", error);
+      setProjects([]);
+    }
   }, []);
 
   return (

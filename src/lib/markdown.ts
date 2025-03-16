@@ -15,9 +15,12 @@ export function parseMarkdown(content: string) {
 export function parseProjectMarkdown(content: string): Project {
   const { frontMatter, content: markdownContent } = parseMarkdown(content);
   
+  // Ensure slug is defined, fallback to id if not provided
+  const slug = frontMatter.slug || frontMatter.id as string;
+  
   return {
     id: frontMatter.id as string,
-    slug: frontMatter.slug || frontMatter.id as string, // Use slug if provided or fallback to id
+    slug: slug,
     title: frontMatter.title as string,
     description: frontMatter.description as string,
     content: markdownContent,
@@ -34,9 +37,12 @@ export function parseProjectMarkdown(content: string): Project {
 export function parseBlogMarkdown(content: string): BlogPost {
   const { frontMatter, content: markdownContent } = parseMarkdown(content);
   
+  // Ensure slug is defined, fallback to id if not provided
+  const slug = frontMatter.slug || frontMatter.id as string;
+  
   return {
     id: frontMatter.id as string,
-    slug: frontMatter.slug || frontMatter.id as string, // Use slug if provided or fallback to id
+    slug: slug,
     title: frontMatter.title as string,
     excerpt: frontMatter.excerpt as string,
     content: markdownContent,
