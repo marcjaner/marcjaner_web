@@ -5,48 +5,48 @@
 
 @layer base {
   :root {
-    --background: 210 50% 98%;
+    --background: 151 100% 97%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 210 100% 50%;
+    --primary: 151 98% 43%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
+    --secondary: 151 100% 92%;
+    --secondary-foreground: 157 65% 15%;
+    --muted: 151 60% 95%;
     --muted-foreground: 240 3.8% 46.1%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 240 5.9% 10%;
+    --accent: 151 100% 92%;
+    --accent-foreground: 157 65% 15%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 210 100% 50%;
+    --border: 151 60% 90%;
+    --input: 151 60% 90%;
+    --ring: 151 98% 43%;
     --radius: 0.5rem;
   }
  
   .dark {
-    --background: 222 47% 11%;
+    --background: 157 100% 10%;
     --foreground: 0 0% 98%;
-    --card: 222 47% 11%;
+    --card: 157 65% 15%;
     --card-foreground: 0 0% 98%;
-    --popover: 222 47% 11%;
+    --popover: 157 65% 15%;
     --popover-foreground: 0 0% 98%;
-    --primary: 210 100% 50%;
+    --primary: 151 98% 43%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 217 33% 17%;
+    --secondary: 157 53% 17%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 217 33% 17%;
+    --muted: 157 53% 17%;
     --muted-foreground: 240 5% 64.9%;
-    --accent: 217 33% 17%;
+    --accent: 157 53% 17%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 224 76% 48%;
+    --border: 157 53% 17%;
+    --input: 157 53% 17%;
+    --ring: 151 98% 43%;
   }
 
   * {
@@ -90,11 +90,15 @@
   }
 
   .accent-border {
-    @apply border border-primary/20 dark:border-primary/10;
+    @apply border border-aquamarine-300/30 dark:border-aquamarine-700/20;
   }
 
   .accent-glow {
-    @apply shadow-[0_0_15px_rgba(33,150,243,0.1)];
+    @apply shadow-[0_0_15px_rgba(51,245,136,0.15)];
+  }
+  
+  .aqua-card {
+    @apply bg-gradient-to-b from-aquamarine-50 to-aquamarine-100 dark:from-aquamarine-900 dark:to-aquamarine-950 border border-aquamarine-200 dark:border-aquamarine-800;
   }
 }
 
