@@ -1,68 +1,32 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Calendar, Clock, Tag } from 'lucide-react';
+import { BlogPost } from '@/types/collections';
+import { parseBlogMarkdown } from '@/lib/markdown';
+
+// Import blog markdown files
+import airflowPost from '@/content/blog/airflow-etl-pipelines.md?raw';
 
 const BlogPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [posts, setPosts] = useState<BlogPost[]>([]);
   
-  // This would eventually pull from your collection, but for now we'll use dummy data
-  const posts = [
-    {
-      id: 1,
-      title: 'Setting Up Efficient ETL Pipelines with Apache Airflow',
-      excerpt: 'Learn how to design and implement efficient ETL pipelines using Apache Airflow for data orchestration.',
-      date: 'May 15, 2023',
-      readTime: '8 min read',
-      tags: ['ETL', 'Airflow', 'Data Engineering'],
-      image: 'blog1.jpg'
-    },
-    {
-      id: 2,
-      title: 'Real-time Data Processing with Kafka and Spark',
-      excerpt: 'A comprehensive guide to building real-time data processing systems using Kafka and Spark Streaming.',
-      date: 'Apr 22, 2023',
-      readTime: '12 min read',
-      tags: ['Kafka', 'Spark', 'Streaming'],
-      image: 'blog2.jpg'
-    },
-    {
-      id: 3,
-      title: 'Building Interactive Dashboards with React and D3.js',
-      excerpt: 'Step-by-step tutorial for creating beautiful, interactive data visualizations with React and D3.js.',
-      date: 'Mar 10, 2023',
-      readTime: '10 min read',
-      tags: ['React', 'D3.js', 'Visualization'],
-      image: 'blog3.jpg'
-    },
-    {
-      id: 4,
-      title: 'Cloud Data Warehousing: Snowflake vs. BigQuery',
-      excerpt: 'A detailed comparison of two popular cloud data warehousing solutions: Snowflake and BigQuery.',
-      date: 'Feb 28, 2023',
-      readTime: '15 min read',
-      tags: ['Data Warehouse', 'Snowflake', 'BigQuery'],
-      image: 'blog4.jpg'
-    },
-    {
-      id: 5,
-      title: 'Best Practices for Data Quality Monitoring',
-      excerpt: 'Learn how to implement robust data quality monitoring to ensure reliable and trustworthy analytics.',
-      date: 'Jan 15, 2023',
-      readTime: '7 min read',
-      tags: ['Data Quality', 'Monitoring', 'Best Practices'],
-      image: 'blog5.jpg'
-    },
-    {
-      id: 6,
-      title: 'Introduction to dbt for Analytics Engineering',
-      excerpt: 'Discover how dbt (data build tool) can transform your analytics workflows and improve collaboration.',
-      date: 'Dec 5, 2022',
-      readTime: '9 min read',
-      tags: ['dbt', 'Analytics Engineering', 'SQL'],
-      image: 'blog6.jpg'
+  useEffect(() => {
+    try {
+      // Parse the markdown files to get the blog data
+      const markdownContents = [airflowPost];
+      const parsedPosts = markdownContents.map(content => parseBlogMarkdown(content));
+      
+      // Sort posts by date (most recent first)
+      parsedPosts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      
+      setPosts(parsedPosts);
+    } catch (error) {
+      console.error("Error parsing blog markdown:", error);
+      setPosts([]);
     }
-  ];
+  }, []);
 
   const filteredPosts = posts.filter(post => 
     post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -135,10 +99,17 @@ const BlogPage = () => {
                   >
                     <div className="md:w-1/3">
                       <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted">
-                        {/* Blog post image placeholder */}
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
-                          <span className="text-muted-foreground">Post Image</span>
-                        </div>
+                        <Link to={`/blog/${post.slug}`}>
+                          <img 
+                            src={post.featuredImage} 
+                            alt={post.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = '/placeholder.svg';
+                            }}
+                          />
+                        </Link>
                       </div>
                     </div>
                     <div className="md:w-2/3">
@@ -154,7 +125,7 @@ const BlogPage = () => {
                       </div>
                       <h2 className="text-2xl font-bold mb-3">
                         <Link 
-                          to={`/blog/${post.id}`} 
+                          to={`/blog/${post.slug}`} 
                           className="hover:text-primary transition-colors"
                         >
                           {post.title}

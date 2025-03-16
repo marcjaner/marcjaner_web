@@ -4,11 +4,17 @@ import matter from 'gray-matter';
 
 // Function to parse markdown content with front matter
 export function parseMarkdown(content: string) {
-  const { data, content: markdownContent } = matter(content);
-  return {
-    frontMatter: data,
-    content: markdownContent,
-  };
+  try {
+    // Use string-based approach to avoid Buffer issues in browser
+    const { data, content: markdownContent } = matter(content);
+    return {
+      frontMatter: data,
+      content: markdownContent,
+    };
+  } catch (error) {
+    console.error("Error parsing markdown:", error);
+    throw error;
+  }
 }
 
 // Function to parse project markdown files
