@@ -2,69 +2,81 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, Github } from 'lucide-react';
+import { Project } from '@/types/collections';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
 const ProjectsPage = () => {
   // This would eventually pull from your collection, but for now we'll use dummy data
-  const projects = [
+  const projects: Project[] = [
     {
-      id: 1,
+      id: '1',
       title: 'Data Visualization Dashboard',
       description: 'An interactive dashboard for visualizing complex datasets using D3.js and React.',
-      tags: ['React', 'D3.js', 'Data Visualization'],
-      image: 'project1.jpg',
+      content: 'Detailed description of the data visualization dashboard project...',
+      featuredImage: '/placeholder.svg',
+      technologies: ['React', 'D3.js', 'Data Visualization'],
       githubUrl: 'https://github.com',
-      demoUrl: 'https://demo.com',
-      featured: true
+      liveUrl: 'https://demo.com',
+      featured: true,
+      date: '2023-05-15'
     },
     {
-      id: 2,
+      id: '2',
       title: 'ETL Pipeline Framework',
       description: 'A modular framework for building efficient ETL pipelines with Python and Apache Airflow.',
-      tags: ['Python', 'Airflow', 'ETL'],
-      image: 'project2.jpg',
+      content: 'Detailed description of the ETL pipeline framework project...',
+      featuredImage: '/placeholder.svg',
+      technologies: ['Python', 'Airflow', 'ETL'],
       githubUrl: 'https://github.com',
-      demoUrl: null,
-      featured: true
+      featured: true,
+      date: '2023-03-10'
     },
     {
-      id: 3,
+      id: '3',
       title: 'Real-time Analytics API',
       description: 'A high-performance API for real-time analytics built with Node.js and WebSockets.',
-      tags: ['Node.js', 'WebSockets', 'Real-time'],
-      image: 'project3.jpg',
+      content: 'Detailed description of the real-time analytics API project...',
+      featuredImage: '/placeholder.svg',
+      technologies: ['Node.js', 'WebSockets', 'Real-time'],
       githubUrl: 'https://github.com',
-      demoUrl: 'https://demo.com',
-      featured: false
+      liveUrl: 'https://demo.com',
+      featured: false,
+      date: '2023-01-20'
     },
     {
-      id: 4,
+      id: '4',
       title: 'Machine Learning Model Deployment',
       description: 'A system for deploying machine learning models to production with monitoring and A/B testing.',
-      tags: ['Python', 'ML', 'DevOps'],
-      image: 'project4.jpg',
+      content: 'Detailed description of the machine learning model deployment project...',
+      featuredImage: '/placeholder.svg',
+      technologies: ['Python', 'ML', 'DevOps'],
       githubUrl: 'https://github.com',
-      demoUrl: 'https://demo.com',
-      featured: false
+      liveUrl: 'https://demo.com',
+      featured: false,
+      date: '2022-11-05'
     },
     {
-      id: 5,
+      id: '5',
       title: 'Data Lake Architecture',
       description: 'A scalable data lake architecture using AWS S3, Glue, and Athena for cost-effective analytics.',
-      tags: ['AWS', 'Data Lake', 'Cloud'],
-      image: 'project5.jpg',
+      content: 'Detailed description of the data lake architecture project...',
+      featuredImage: '/placeholder.svg',
+      technologies: ['AWS', 'Data Lake', 'Cloud'],
       githubUrl: 'https://github.com',
-      demoUrl: null,
-      featured: false
+      featured: false,
+      date: '2022-09-18'
     },
     {
-      id: 6,
+      id: '6',
       title: 'IoT Data Collection Platform',
       description: 'A platform for collecting, processing, and analyzing data from IoT devices in real-time.',
-      tags: ['IoT', 'MQTT', 'Time-series DB'],
-      image: 'project6.jpg',
+      content: 'Detailed description of the IoT data collection platform project...',
+      featuredImage: '/placeholder.svg',
+      technologies: ['IoT', 'MQTT', 'Time-series DB'],
       githubUrl: 'https://github.com',
-      demoUrl: 'https://demo.com',
-      featured: false
+      liveUrl: 'https://demo.com',
+      featured: false,
+      date: '2022-07-30'
     }
   ];
 
@@ -83,39 +95,49 @@ const ProjectsPage = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
-              <div 
+              <Card 
                 key={project.id} 
-                className={`bg-card border border-border rounded-xl overflow-hidden hover-card reveal ${index < 3 ? `stagger-${index + 1}` : ''}`}
+                className={`overflow-hidden hover:shadow-lg transition-shadow reveal ${index < 3 ? `stagger-${index + 1}` : ''}`}
               >
                 <div className="aspect-video bg-muted">
-                  {/* Project image placeholder */}
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-primary/10">
-                    <span className="text-muted-foreground">Project Image</span>
-                  </div>
+                  {/* Project image */}
+                  <img 
+                    src={project.featuredImage || '/placeholder.svg'} 
+                    alt={project.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = '/placeholder.svg';
+                    }}
+                  />
                 </div>
-                <div className="p-6">
-                  <div className="mb-4 flex flex-wrap gap-2">
-                    {project.tags.map((tag, i) => (
+                <CardHeader className="p-6 pb-2">
+                  <div className="mb-2 flex flex-wrap gap-2">
+                    {project.technologies.map((tech, i) => (
                       <span 
                         key={i} 
                         className="text-xs font-medium bg-secondary px-2 py-1 rounded"
                       >
-                        {tag}
+                        {tech}
                       </span>
                     ))}
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                  <h3 className="text-xl font-bold">{project.title}</h3>
+                </CardHeader>
+                <CardContent className="p-6 pt-2">
                   <p className="text-muted-foreground text-sm mb-4">
                     {project.description}
                   </p>
-                  <div className="flex justify-between items-center">
-                    <Link 
-                      to={`/projects/${project.id}`} 
-                      className="text-primary hover:underline text-sm font-medium"
-                    >
-                      View Details
-                    </Link>
-                    <div className="flex items-center gap-3">
+                </CardContent>
+                <CardFooter className="p-6 pt-0 flex justify-between items-center">
+                  <Link 
+                    to={`/projects/${project.id}`} 
+                    className="text-primary hover:underline text-sm font-medium"
+                  >
+                    View Details
+                  </Link>
+                  <div className="flex items-center gap-3">
+                    {project.githubUrl && (
                       <a 
                         href={project.githubUrl} 
                         target="_blank" 
@@ -125,21 +147,21 @@ const ProjectsPage = () => {
                       >
                         <Github size={16} />
                       </a>
-                      {project.demoUrl && (
-                        <a 
-                          href={project.demoUrl} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-muted-foreground hover:text-foreground"
-                          aria-label="Live Demo"
-                        >
-                          <ExternalLink size={16} />
-                        </a>
-                      )}
-                    </div>
+                    )}
+                    {project.liveUrl && (
+                      <a 
+                        href={project.liveUrl} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-foreground"
+                        aria-label="Live Demo"
+                      >
+                        <ExternalLink size={16} />
+                      </a>
+                    )}
                   </div>
-                </div>
-              </div>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         </div>

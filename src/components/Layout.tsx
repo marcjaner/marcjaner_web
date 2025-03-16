@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import { initScrollReveal } from '@/lib/utils';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -9,27 +10,9 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   useEffect(() => {
-    // Implement scroll reveal animation
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, observerOptions);
-
-    const revealElements = document.querySelectorAll('.reveal');
-    revealElements.forEach(el => observer.observe(el));
-
-    return () => {
-      revealElements.forEach(el => observer.unobserve(el));
-    };
+    // Implement scroll reveal animation using the utility function
+    const cleanup = initScrollReveal();
+    return cleanup;
   }, []);
 
   return (
