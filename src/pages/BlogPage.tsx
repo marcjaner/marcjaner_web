@@ -2,58 +2,36 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, Tag } from 'lucide-react';
+import { useBlogPosts } from '@/hooks/useBlogPosts';
 
 const BlogPage = () => {
-  // Hardcoded blog posts
-  const posts = [
-    {
-      id: '1',
-      slug: 'airflow-etl-pipelines',
-      title: 'Building ETL Pipelines with Apache Airflow',
-      excerpt: 'Learn how to create robust ETL pipelines using Apache Airflow, with examples and best practices.',
-      featuredImage: '/placeholder.svg',
-      author: 'Marc Janer',
-      date: 'May 15, 2023',
-      readTime: '8 min read',
-      tags: ['Data Engineering', 'ETL', 'Apache Airflow']
-    },
-    {
-      id: '2',
-      slug: 'data-modeling-best-practices',
-      title: 'Data Modeling Best Practices for Analytics',
-      excerpt: 'Explore the best approaches to data modeling for analytics workloads, focusing on dimensional modeling.',
-      featuredImage: '/placeholder.svg',
-      author: 'Marc Janer',
-      date: 'June 22, 2023',
-      readTime: '6 min read',
-      tags: ['Data Modeling', 'Analytics', 'Best Practices']
-    },
-    {
-      id: '3',
-      slug: 'spark-vs-dask',
-      title: 'Apache Spark vs Dask: Choosing the Right Framework',
-      excerpt: 'A detailed comparison between Apache Spark and Dask for large-scale data processing.',
-      featuredImage: '/placeholder.svg',
-      author: 'Marc Janer',
-      date: 'July 10, 2023',
-      readTime: '10 min read',
-      tags: ['Data Processing', 'Apache Spark', 'Dask']
-    }
-  ];
+  const { data: posts, isLoading, error } = useBlogPosts();
 
   return (
-    <>
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto mb-16 text-center reveal">
-            <h1 className="text-4xl font-bold mb-6">Blog</h1>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Thoughts, tutorials, and insights on data engineering, software development,
-              and technology.
-            </p>
-            <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
+    <section className="py-20">
+      <div className="container mx-auto px-6">
+        <div className="max-w-4xl mx-auto mb-16 text-center reveal">
+          <h1 className="text-4xl font-bold mb-6">Blog</h1>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Thoughts, tutorials, and insights on data engineering, software development,
+            and technology.
+          </p>
+          <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
+        </div>
+        
+        {isLoading ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Loading blog posts...</p>
           </div>
-          
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Error loading blog posts. Please try again later.</p>
+          </div>
+        ) : !posts || posts.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">No blog posts found.</p>
+          </div>
+        ) : (
           <div className="max-w-4xl mx-auto">
             <div className="space-y-12">
               {posts.map((post, index) => (
@@ -68,13 +46,17 @@ const BlogPage = () => {
                           src={post.featuredImage} 
                           alt={post.title}
                           className="w-full h-full object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/placeholder.svg';
+                          }}
                         />
                       </Link>
                     </div>
                   </div>
                   <div className="md:w-2/3">
                     <div className="flex flex-wrap gap-2 mb-3">
-                      {post.tags.map((tag, i) => (
+                      {post.tags && post.tags.map((tag, i) => (
                         <span 
                           key={i} 
                           className="inline-flex items-center gap-1 text-xs font-medium bg-secondary px-2 py-1 rounded"
@@ -107,9 +89,9 @@ const BlogPage = () => {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-    </>
+        )}
+      </div>
+    </section>
   );
 };
 

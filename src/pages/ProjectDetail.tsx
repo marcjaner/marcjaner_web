@@ -1,101 +1,16 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
-import { Project } from '@/types/collections';
 import { Button } from '@/components/ui/button';
 import ReactMarkdown from 'react-markdown';
-import { useToast } from '@/hooks/use-toast';
-import { parseProjectMarkdown } from '@/lib/markdown';
-
-// Import raw markdown content for fallback
-import dataVizProjectContent from '@/content/projects/data-visualization-dashboard.md?raw';
-import etlPipelineContent from '@/content/projects/etl-pipeline-framework.md?raw';
-import automatedMlContent from '@/content/projects/automated-ml-pipeline.md?raw';
+import { useProject } from '@/hooks/useProjects';
 
 const ProjectDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [project, setProject] = useState<Project | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const { toast } = useToast();
-  
-  // Map of project slugs to raw content for fallback
-  const projectContentMap: Record<string, string> = {
-    'data-visualization-dashboard': dataVizProjectContent,
-    'etl-pipeline-framework': etlPipelineContent,
-    'automated-ml-pipeline': automatedMlContent,
-  };
-  
-  useEffect(() => {
-    const fetchProject = async () => {
-      if (!slug) return;
-      
-      try {
-        setLoading(true);
-        
-        // First try to get project from Netlify function
-        try {
-          // Use full URL to Netlify function
-          const functionUrl = '/.netlify/functions/projects';
-          console.log('Attempting to fetch project from API:', functionUrl, 'for slug:', slug);
-          
-          // Add a cache-busting parameter to prevent caching
-          const timestamp = new Date().getTime();
-          const response = await fetch(`${functionUrl}?slug=${slug}&_=${timestamp}`);
-          
-          if (response.ok) {
-            const contentType = response.headers.get('content-type');
-            console.log('Response content type:', contentType);
-            
-            if (contentType && contentType.includes('application/json')) {
-              const data = await response.json();
-              console.log('Successfully loaded project from API');
-              setProject(data);
-              return;
-            } else {
-              console.warn('API response is not JSON', contentType);
-              // Continue to fallback
-            }
-          } else {
-            console.warn(`API request failed with status: ${response.status}`);
-            // Continue to fallback
-          }
-        } catch (apiError) {
-          console.warn('Error fetching from API, using fallback data:', apiError);
-          // Continue to fallback
-        }
-        
-        // Fallback: Parse markdown file directly if we have it
-        if (projectContentMap[slug]) {
-          console.log('Using fallback: Loading project data from local markdown file');
-          try {
-            const projectData = parseProjectMarkdown(projectContentMap[slug]);
-            setProject(projectData);
-          } catch (parseError) {
-            console.error('Error parsing project markdown:', parseError);
-            throw new Error('Failed to parse project data');
-          }
-        } else {
-          throw new Error('Project not found');
-        }
-        
-      } catch (error) {
-        console.error("Error loading project:", error);
-        toast({
-          title: "Error",
-          description: error instanceof Error ? error.message : "Failed to load project details",
-          variant: "destructive",
-        });
-        setProject(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: project, isLoading, error } = useProject(slug);
 
-    fetchProject();
-  }, [slug, toast]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="container mx-auto px-6 py-20">
         <div className="max-w-3xl mx-auto text-center">
@@ -105,7 +20,7 @@ const ProjectDetail = () => {
     );
   }
 
-  if (!project) {
+  if (error || !project) {
     return (
       <div className="container mx-auto px-6 py-20">
         <div className="max-w-3xl mx-auto text-center">
@@ -151,7 +66,7 @@ const ProjectDetail = () => {
         </div>
 
         <div className="flex flex-wrap gap-2 mb-8 reveal stagger-2">
-          {project.technologies.map((tech, index) => (
+          {project.technologies && project.technologies.map((tech, index) => (
             <span 
               key={index} 
               className="bg-secondary text-secondary-foreground text-xs font-medium px-3 py-1 rounded-full"
