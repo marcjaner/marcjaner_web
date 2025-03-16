@@ -4,35 +4,46 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
 import { Project } from '@/types/collections';
 import { Button } from '@/components/ui/button';
-import { parseProjectMarkdown } from '@/lib/markdown';
 import ReactMarkdown from 'react-markdown';
-
-// Import project markdown files
-import data1 from '@/content/projects/data-visualization-dashboard.md?raw';
-import data2 from '@/content/projects/etl-pipeline-framework.md?raw';
-import data3 from '@/content/projects/automated-ml-pipeline.md?raw';
+import { useToast } from '@/hooks/use-toast';
 
 const ProjectDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const { toast } = useToast();
   
   useEffect(() => {
-    try {
-      // Parse all projects and find the one matching the slug
-      const markdownContents = [data1, data2, data3];
-      const projects = markdownContents.map(content => parseProjectMarkdown(content));
-      const foundProject = projects.find(p => p.slug === slug || p.id === slug);
+    const fetchProject = async () => {
+      if (!slug) return;
       
-      if (foundProject) {
-        setProject(foundProject);
+      try {
+        setLoading(true);
+        const response = await fetch(`/.netlify/functions/projects?slug=${slug}`);
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Project not found');
+          }
+          throw new Error('Failed to fetch project details');
+        }
+        
+        const data = await response.json();
+        setProject(data);
+      } catch (error) {
+        console.error("Error loading project:", error);
+        toast({
+          title: "Error",
+          description: error instanceof Error ? error.message : "Failed to load project details",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    } catch (error) {
-      console.error("Error loading project:", error);
-      setLoading(false);
-    }
-  }, [slug]);
+    };
+
+    fetchProject();
+  }, [slug, toast]);
 
   if (loading) {
     return (
