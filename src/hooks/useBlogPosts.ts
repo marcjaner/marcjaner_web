@@ -26,23 +26,13 @@ export function useBlogPosts() {
         // Fallback to local files if API fails
         console.log('API request failed, using local files');
         return blogFiles
-          .map(content => parseBlogMarkdown(content))
-          .map(post => {
-            // Remove content for list view
-            const { content, ...rest } = post;
-            return rest;
-          });
+          .map(content => parseBlogMarkdown(content));
       } catch (error) {
         console.error('Error fetching blog posts:', error);
         
         // Fallback to local files
         return blogFiles
-          .map(content => parseBlogMarkdown(content))
-          .map(post => {
-            // Remove content for list view
-            const { content, ...rest } = post;
-            return rest;
-          });
+          .map(content => parseBlogMarkdown(content));
       }
     }
   });

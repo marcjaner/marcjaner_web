@@ -30,23 +30,13 @@ export function useProjects() {
         // Fallback to local files if API fails
         console.log('API request failed, using local files');
         return projectFiles
-          .map(content => parseProjectMarkdown(content))
-          .map(project => {
-            // Remove content for list view
-            const { content, ...rest } = project;
-            return rest;
-          });
+          .map(content => parseProjectMarkdown(content));
       } catch (error) {
         console.error('Error fetching projects:', error);
         
         // Fallback to local files
         return projectFiles
-          .map(content => parseProjectMarkdown(content))
-          .map(project => {
-            // Remove content for list view
-            const { content, ...rest } = project;
-            return rest;
-          });
+          .map(content => parseProjectMarkdown(content));
       }
     }
   });

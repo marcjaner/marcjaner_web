@@ -8,6 +8,8 @@ import { useProjects } from '@/hooks/useProjects';
 const ProjectsPage = () => {
   const { data: projects, isLoading, error } = useProjects();
 
+  console.log("Projects data:", projects);
+
   return (
     <section className="py-20">
       <div className="container mx-auto px-6">
@@ -27,6 +29,9 @@ const ProjectsPage = () => {
         ) : error ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">Error loading projects. Please try again later.</p>
+            <pre className="mt-4 text-xs text-red-500 bg-red-50 p-4 rounded-md overflow-auto max-w-2xl mx-auto">
+              {String(error)}
+            </pre>
           </div>
         ) : !projects || projects.length === 0 ? (
           <div className="text-center py-12">
