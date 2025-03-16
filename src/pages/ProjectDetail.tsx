@@ -1,38 +1,48 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
 import { Project } from '@/types/collections';
 import { Button } from '@/components/ui/button';
-import { initScrollReveal } from '@/lib/utils';
+import { parseProjectMarkdown } from '@/lib/markdown';
 import ReactMarkdown from 'react-markdown';
 
-// Import this for development; in production, we would use a different approach
+// Import project markdown files
 import data1 from '@/content/projects/data-visualization-dashboard.md?raw';
 import data2 from '@/content/projects/etl-pipeline-framework.md?raw';
-import { parseProjectMarkdown } from '@/lib/markdown';
+import data3 from '@/content/projects/automated-ml-pipeline.md?raw';
 
 const ProjectDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [project, setProject] = useState<Project | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   
   useEffect(() => {
-    // In a real app, this would fetch the markdown file dynamically
-    // For this demo, we're importing them directly
-    const markdownContents = [data1, data2];
-    
-    // Parse all projects and find the one matching the slug
-    const projects = markdownContents.map(content => parseProjectMarkdown(content));
-    const foundProject = projects.find(p => p.slug === slug);
-    
-    if (foundProject) {
-      setProject(foundProject);
+    try {
+      // Parse all projects and find the one matching the slug
+      const markdownContents = [data1, data2, data3];
+      const projects = markdownContents.map(content => parseProjectMarkdown(content));
+      const foundProject = projects.find(p => p.slug === slug || p.id === slug);
+      
+      if (foundProject) {
+        setProject(foundProject);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error loading project:", error);
+      setLoading(false);
     }
   }, [slug]);
 
-  React.useEffect(() => {
-    const cleanup = initScrollReveal();
-    return cleanup;
-  }, []);
+  if (loading) {
+    return (
+      <div className="container mx-auto px-6 py-20">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-muted-foreground">Loading project details...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!project) {
     return (

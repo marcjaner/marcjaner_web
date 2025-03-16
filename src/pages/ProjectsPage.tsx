@@ -1,49 +1,29 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, Github } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Project } from '@/types/collections';
+import { parseProjectMarkdown } from '@/lib/markdown';
+
+// Import project markdown files
+import data1 from '@/content/projects/data-visualization-dashboard.md?raw';
+import data2 from '@/content/projects/etl-pipeline-framework.md?raw';
+import data3 from '@/content/projects/automated-ml-pipeline.md?raw';
 
 const ProjectsPage = () => {
-  // Hardcoded projects
-  const projects = [
-    {
-      id: '1',
-      slug: 'data-visualization-dashboard',
-      title: 'Data Visualization Dashboard',
-      description: 'An interactive dashboard for visualizing complex datasets using React and D3.js.',
-      featuredImage: '/placeholder.svg',
-      technologies: ['React', 'D3.js', 'TypeScript', 'Tailwind CSS'],
-      githubUrl: 'https://github.com/marcjaner/data-viz-dashboard',
-      liveUrl: 'https://data-viz.marcjaner.com',
-      featured: true,
-      date: '2023-04-15'
-    },
-    {
-      id: '2',
-      slug: 'etl-pipeline-framework',
-      title: 'ETL Pipeline Framework',
-      description: 'A scalable ETL framework built with Python, Apache Airflow, and Spark for large-scale data processing.',
-      featuredImage: '/placeholder.svg',
-      technologies: ['Python', 'Apache Airflow', 'Apache Spark', 'AWS'],
-      githubUrl: 'https://github.com/marcjaner/etl-pipeline-framework',
-      liveUrl: null,
-      featured: true,
-      date: '2023-02-20'
-    },
-    {
-      id: '3',
-      slug: 'automated-ml-pipeline',
-      title: 'Automated ML Pipeline',
-      description: 'An end-to-end machine learning pipeline with automated feature engineering and model selection.',
-      featuredImage: '/placeholder.svg',
-      technologies: ['Python', 'Scikit-learn', 'MLflow', 'FastAPI'],
-      githubUrl: 'https://github.com/marcjaner/automated-ml-pipeline',
-      liveUrl: 'https://ml-demo.marcjaner.com',
-      featured: false,
-      date: '2022-11-05'
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    try {
+      // Parse the markdown content
+      const markdownContents = [data1, data2, data3];
+      const parsedProjects = markdownContents.map(content => parseProjectMarkdown(content));
+      setProjects(parsedProjects);
+    } catch (error) {
+      console.error("Error loading projects:", error);
     }
-  ];
+  }, []);
 
   return (
     <>
@@ -91,7 +71,7 @@ const ProjectsPage = () => {
                 </CardContent>
                 <CardFooter className="p-6 pt-0 flex justify-between items-center">
                   <Link 
-                    to={`/projects/${project.slug}`} 
+                    to={`/projects/${project.slug || project.id}`} 
                     className="text-primary hover:underline text-sm font-medium"
                   >
                     View Details
