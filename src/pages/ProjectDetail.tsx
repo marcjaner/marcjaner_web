@@ -1,48 +1,41 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
 import { Project } from '@/types/collections';
 import { Button } from '@/components/ui/button';
 import { initScrollReveal } from '@/lib/utils';
+import ReactMarkdown from 'react-markdown';
+
+// Import this for development; in production, we would use a different approach
+import data1 from '@/content/projects/data-visualization-dashboard.md?raw';
+import data2 from '@/content/projects/etl-pipeline-framework.md?raw';
+import { parseProjectMarkdown } from '@/lib/markdown';
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const [project, setProject] = useState<Project | null>(null);
   
-  // This would eventually pull from your collection, but for now we'll use dummy data
-  const projects: Project[] = [
-    {
-      id: '1',
-      title: 'Data Visualization Dashboard',
-      description: 'An interactive dashboard for visualizing complex datasets using D3.js and React.',
-      content: 'Detailed description of the data visualization dashboard project with in-depth information about the project goals, implementation details, challenges overcome, and results achieved. This dashboard enables users to explore complex datasets through interactive visualizations, filters, and data transformations.',
-      featuredImage: '/placeholder.svg',
-      technologies: ['React', 'D3.js', 'Data Visualization', 'TypeScript', 'Tailwind CSS'],
-      githubUrl: 'https://github.com',
-      liveUrl: 'https://demo.com',
-      featured: true,
-      date: '2023-05-15'
-    },
-    {
-      id: '2',
-      title: 'ETL Pipeline Framework',
-      description: 'A modular framework for building efficient ETL pipelines with Python and Apache Airflow.',
-      content: 'This ETL Pipeline Framework provides a modular and configurable system for building data pipelines. It leverages Apache Airflow for orchestration and Python for transformation logic, making it easy to create, monitor, and maintain complex data workflows. The framework includes built-in error handling, logging, and performance monitoring.',
-      featuredImage: '/placeholder.svg',
-      technologies: ['Python', 'Airflow', 'ETL', 'SQL', 'Docker'],
-      githubUrl: 'https://github.com',
-      featured: true,
-      date: '2023-03-10'
-    },
-    // ... additional projects with the same structure
-  ];
+  useEffect(() => {
+    // In a real app, this would fetch the markdown file dynamically
+    // For this demo, we're importing them directly
+    const markdownMap: Record<string, string> = {
+      '1': data1,
+      '2': data2,
+    };
+    
+    const markdownContent = markdownMap[id || ''];
+    
+    if (markdownContent) {
+      const parsedProject = parseProjectMarkdown(markdownContent);
+      setProject(parsedProject);
+    }
+  }, [id]);
 
   React.useEffect(() => {
     const cleanup = initScrollReveal();
     return cleanup;
   }, []);
-
-  const project = projects.find(p => p.id === id);
 
   if (!project) {
     return (
@@ -124,9 +117,9 @@ const ProjectDetail = () => {
         </div>
 
         <div className="prose dark:prose-invert max-w-none mb-16 reveal stagger-4">
-          <div className="whitespace-pre-line">
+          <ReactMarkdown>
             {project.content}
-          </div>
+          </ReactMarkdown>
         </div>
       </div>
     </div>
