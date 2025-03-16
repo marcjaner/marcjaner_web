@@ -16,7 +16,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     // Implement scroll reveal animation using the utility function
     const cleanup = initScrollReveal();
     return cleanup;
-  }, []);
+  }, [location.pathname]); // Re-initialize scroll reveal when route changes
 
   // Add effect to scroll to top when route changes
   useEffect(() => {

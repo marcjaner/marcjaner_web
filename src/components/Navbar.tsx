@@ -24,7 +24,8 @@ export const Navbar = () => {
   // Close mobile menu when route changes
   useEffect(() => {
     if (isOpen) {
-      toggleNav();
+      setIsOpen(false);
+      document.body.style.overflow = 'auto';
     }
   }, [location.pathname]);
 
