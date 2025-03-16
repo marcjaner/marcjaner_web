@@ -1,27 +1,28 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 157 30% 5%;
-    --foreground: 0 0% 98%;
-    --card: 157 30% 7%;
-    --card-foreground: 0 0% 98%;
-    --popover: 157 30% 7%;
-    --popover-foreground: 0 0% 98%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
     --primary: 151 98% 43%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 157 30% 10%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 157 30% 10%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 157 30% 10%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 157 30% 15%;
-    --input: 157 30% 15%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
     --ring: 151 98% 43%;
     --radius: 0.5rem;
   }
@@ -55,6 +56,9 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+  }
+
+  body.dark {
     background-image: linear-gradient(to bottom, 
       hsl(var(--background)) 0%, 
       hsl(var(--background)) 80%, 
@@ -73,7 +77,15 @@
 
 @layer components {
   .glass-panel {
-    @apply backdrop-blur-md bg-black/30 dark:bg-black/40 border border-white/10 dark:border-white/5 shadow-lg;
+    @apply backdrop-blur-md border shadow-lg;
+  }
+  
+  .dark .glass-panel {
+    @apply bg-black/30 border-white/10;
+  }
+  
+  .light .glass-panel {
+    @apply bg-white/70 border-gray-200;
   }
   
   .hover-card {
@@ -89,19 +101,51 @@
   }
 
   .accent-border {
-    @apply border border-aquamarine-700/20;
+    @apply border;
+  }
+  
+  .dark .accent-border {
+    @apply border-aquamarine-700/20;
+  }
+  
+  .light .accent-border {
+    @apply border-aquamarine-500/30;
   }
 
   .accent-glow {
+    @apply shadow-md;
+  }
+  
+  .dark .accent-glow {
     @apply shadow-[0_0_15px_rgba(9,222,103,0.1)];
   }
   
+  .light .accent-glow {
+    @apply shadow-[0_0_15px_rgba(9,222,103,0.15)];
+  }
+  
   .aqua-card {
-    @apply bg-gradient-to-b from-aquamarine-950 to-aquamarine-900 border border-aquamarine-800/20;
+    @apply border;
+  }
+  
+  .dark .aqua-card {
+    @apply bg-gradient-to-b from-aquamarine-950 to-aquamarine-900 border-aquamarine-800/20;
+  }
+  
+  .light .aqua-card {
+    @apply bg-gradient-to-b from-aquamarine-50 to-aquamarine-100 border-aquamarine-200/50;
   }
 
   .mobile-menu {
-    @apply bg-gradient-to-b from-background to-aquamarine-950/90 backdrop-blur-lg;
+    @apply backdrop-blur-lg;
+  }
+  
+  .dark .mobile-menu {
+    @apply bg-gradient-to-b from-background to-aquamarine-950/90;
+  }
+  
+  .light .mobile-menu {
+    @apply bg-gradient-to-b from-white to-aquamarine-50/90;
   }
 }
 

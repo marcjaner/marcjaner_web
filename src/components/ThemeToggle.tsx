@@ -13,17 +13,28 @@ export const ThemeToggle = ({ className }: { className?: string }) => {
     
     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
       document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
       setIsDark(true);
+    } else {
+      document.documentElement.classList.add('light');
+      document.body.classList.add('light');
+      setIsDark(false);
     }
   }, []);
 
   const toggleTheme = () => {
     if (isDark) {
       document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+      document.body.classList.remove('dark');
+      document.body.classList.add('light');
       localStorage.setItem('theme', 'light');
       setIsDark(false);
     } else {
+      document.documentElement.classList.remove('light');
       document.documentElement.classList.add('dark');
+      document.body.classList.remove('light');
+      document.body.classList.add('dark');
       localStorage.setItem('theme', 'dark');
       setIsDark(true);
     }
