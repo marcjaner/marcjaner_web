@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -100,9 +99,12 @@
   .aqua-card {
     @apply bg-gradient-to-b from-aquamarine-950 to-aquamarine-900 border border-aquamarine-800/20;
   }
+
+  .mobile-menu {
+    @apply bg-gradient-to-b from-background to-aquamarine-950/90 backdrop-blur-lg;
+  }
 }
 
-/* Make sure to reset any preexisting styles */
 #root {
   max-width: 100%;
   margin: 0;
@@ -110,7 +112,6 @@
   text-align: left;
 }
 
-/* Animations for scroll reveal */
 .reveal {
   opacity: 0;
   transform: translateY(20px);

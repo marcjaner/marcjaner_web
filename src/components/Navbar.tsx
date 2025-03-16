@@ -103,36 +103,50 @@ export const Navbar = () => {
         </nav>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Full-screen Mobile Menu with Close Button */}
       {isMobile && (
         <div 
           className={cn(
-            "fixed inset-0 bg-background glass-panel transition-all duration-300 transform pt-20",
-            isOpen ? "translate-x-0" : "translate-x-full"
+            "fixed inset-0 bg-background/95 backdrop-blur-lg z-50 flex flex-col transition-all duration-300 transform",
+            isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
           )}
         >
-          <div className="flex flex-col items-center gap-8 p-8">
+          <div className="container mx-auto px-6 py-6 flex justify-end">
+            <button 
+              onClick={toggleNav}
+              className="p-2 focus:outline-none text-primary"
+              aria-label="Close menu"
+            >
+              <X size={28} />
+            </button>
+          </div>
+          
+          <div className="flex-1 flex flex-col items-center justify-center gap-10 p-8">
             <Link 
               to="/projects" 
-              className="text-2xl font-medium cursor-pointer"
+              className="text-3xl font-medium cursor-pointer hover:text-primary transition-colors"
+              onClick={toggleNav}
             >
               Projects
             </Link>
             <Link 
               to="/blog" 
-              className="text-2xl font-medium cursor-pointer"
+              className="text-3xl font-medium cursor-pointer hover:text-primary transition-colors"
+              onClick={toggleNav}
             >
               Blog
             </Link>
             <Link 
               to="/contact" 
-              className="text-2xl font-medium cursor-pointer"
+              className="text-3xl font-medium cursor-pointer hover:text-primary transition-colors"
+              onClick={toggleNav}
             >
               Contact
             </Link>
             <Link 
               to="/newsletter" 
-              className="bg-primary text-primary-foreground py-3 px-6 rounded-md w-full text-center text-xl cursor-pointer"
+              className="mt-6 bg-primary text-primary-foreground py-3 px-8 rounded-md w-full max-w-xs text-center text-xl cursor-pointer transition-colors hover:bg-primary/90"
+              onClick={toggleNav}
             >
               Newsletter
             </Link>
