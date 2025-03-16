@@ -54,15 +54,6 @@ export const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <Link 
-              to="/" 
-              className={cn(
-                "link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer",
-                location.pathname === "/" && "text-foreground"
-              )}
-            >
-              Home
-            </Link>
-            <Link 
               to="/projects" 
               className={cn(
                 "link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer",
@@ -121,12 +112,6 @@ export const Navbar = () => {
           )}
         >
           <div className="flex flex-col items-center gap-8 p-8">
-            <Link 
-              to="/" 
-              className="text-2xl font-medium cursor-pointer"
-            >
-              Home
-            </Link>
             <Link 
               to="/projects" 
               className="text-2xl font-medium cursor-pointer"
