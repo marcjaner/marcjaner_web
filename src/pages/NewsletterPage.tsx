@@ -1,93 +1,19 @@
 
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import { Mail, Check } from 'lucide-react';
 
 const NewsletterPage = () => {
-  useEffect(() => {
-    // Create and append Substack widget script
-    const script1 = document.createElement('script');
-    script1.innerHTML = `
-      window.CustomSubstackWidget = {
-        substackUrl: "marcjaner.substack.com",
-        placeholder: "example@gmail.com",
-        buttonText: "Subscribe",
-        theme: "custom",
-        colors: {
-          primary: getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || "#000000",
-          input: getComputedStyle(document.documentElement).getPropertyValue('--input-color').trim() || "#FFFFFF",
-          email: getComputedStyle(document.documentElement).getPropertyValue('--email-color').trim() || "#FFFFFF", 
-          text: getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim() || "#000000",
-        }
-      };
-    `;
-    document.body.appendChild(script1);
-
-    // Create and append Substack API script
-    const script2 = document.createElement('script');
-    script2.src = "https://substackapi.com/widget.js";
-    script2.async = true;
-    document.body.appendChild(script2);
-
-    // Update CSS variables based on theme
-    const updateThemeColors = () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      
-      document.documentElement.style.setProperty(
-        '--primary-color', 
-        isDark ? 'hsl(0, 0%, 98%)' : 'hsl(240, 5.9%, 10%)'
-      );
-      document.documentElement.style.setProperty(
-        '--input-color',
-        isDark ? 'hsl(240, 3.7%, 15.9%)' : 'hsl(240, 4.8%, 95.9%)'
-      );
-      document.documentElement.style.setProperty(
-        '--email-color',
-        isDark ? 'hsl(0, 0%, 98%)' : 'hsl(240, 10%, 3.9%)'
-      );
-      document.documentElement.style.setProperty(
-        '--text-color',
-        isDark ? 'hsl(0, 0%, 98%)' : 'hsl(240, 10%, 3.9%)'
-      );
-    };
-
-    // Initial theme setup
-    updateThemeColors();
-
-    // Setup theme change observer
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (
-          mutation.type === 'attributes' &&
-          mutation.attributeName === 'class'
-        ) {
-          updateThemeColors();
-          
-          // Reload the Substack widget when theme changes
-          const embedDiv = document.getElementById('custom-substack-embed');
-          if (embedDiv) {
-            embedDiv.innerHTML = '';
-            
-            // Remove previous scripts
-            if (script1.parentNode) script1.parentNode.removeChild(script1);
-            if (script2.parentNode) script2.parentNode.removeChild(script2);
-            
-            // Re-add scripts
-            document.body.appendChild(script1);
-            document.body.appendChild(script2);
-          }
-        }
-      });
-    });
-
-    // Start observing theme changes
-    observer.observe(document.documentElement, { attributes: true });
-
-    return () => {
-      // Cleanup on component unmount
-      observer.disconnect();
-      if (script1.parentNode) script1.parentNode.removeChild(script1);
-      if (script2.parentNode) script2.parentNode.removeChild(script2);
-    };
-  }, []);
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    // Here you would typically integrate with a newsletter service
+    // For now, we'll just simulate a successful subscription
+    setSubmitted(true);
+    setEmail('');
+  };
 
   return (
     <>
@@ -103,7 +29,71 @@ const NewsletterPage = () => {
             </div>
             
             <div className="bg-card border border-border rounded-2xl p-8 reveal stagger-1">
-              <div id="custom-substack-embed" className="py-4"></div>
+              {!submitted ? (
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-6">
+                    <label htmlFor="email" className="block text-sm font-medium mb-2">
+                      Email Address
+                    </label>
+                    <div className="flex">
+                      <div className="relative flex-grow">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                          <Mail className="text-muted-foreground" size={18} />
+                        </div>
+                        <input
+                          type="email"
+                          id="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full bg-secondary/50 border border-border rounded-l-md pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20"
+                          placeholder="your@email.com"
+                          required
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        className="bg-primary text-primary-foreground px-6 py-3 rounded-r-md font-medium hover:bg-primary/90 transition-colors"
+                      >
+                        Subscribe
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="text-sm text-muted-foreground">
+                    <p>
+                      I'll send you occasional updates about:
+                    </p>
+                    <ul className="mt-2 space-y-2">
+                      <li className="flex items-center gap-2">
+                        <Check size={16} className="text-primary" />
+                        <span>New projects and case studies</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Check size={16} className="text-primary" />
+                        <span>Data engineering tutorials and guides</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Check size={16} className="text-primary" />
+                        <span>Software development insights</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Check size={16} className="text-primary" />
+                        <span>Resources I find useful</span>
+                      </li>
+                    </ul>
+                  </div>
+                </form>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Check size={32} className="text-green-600 dark:text-green-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-4">Thank you for subscribing!</h3>
+                  <p className="text-muted-foreground">
+                    You're now on the list. Look out for the next newsletter in your inbox!
+                  </p>
+                </div>
+              )}
             </div>
             
             <div className="mt-12 text-center reveal stagger-2">

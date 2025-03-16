@@ -25,12 +25,6 @@
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
     --radius: 0.5rem;
-    
-    /* Substack theme variables */
-    --primary-color: hsl(240, 5.9%, 10%);
-    --input-color: hsl(240, 4.8%, 95.9%);
-    --email-color: hsl(240, 10%, 3.9%);
-    --text-color: hsl(240, 10%, 3.9%);
   }
  
   .dark {
@@ -53,12 +47,6 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
-    
-    /* Substack theme variables */
-    --primary-color: hsl(0, 0%, 98%);
-    --input-color: hsl(240, 3.7%, 15.9%);
-    --email-color: hsl(0, 0%, 98%);
-    --text-color: hsl(0, 0%, 98%);
   }
 
   * {
@@ -76,12 +64,6 @@
 
   ::selection {
     @apply bg-primary/10 text-primary;
-  }
-
-  /* Custom styles for Substack embed */
-  #custom-substack-embed iframe {
-    @apply w-full !important;
-    min-height: 100px !important;
   }
 }
 
