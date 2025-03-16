@@ -142,7 +142,7 @@ const BlogPage = () => {
             >
               All
             </button>
-            {allTags.map((tag, index) => (
+            {Array.from(new Set(posts.flatMap(post => post.tags || []))).map((tag, index) => (
               <button
                 key={index}
                 onClick={() => setSearchTerm(tag)}
@@ -158,9 +158,15 @@ const BlogPage = () => {
           </div>
           
           <div className="max-w-4xl mx-auto">
-            {filteredPosts.length > 0 ? (
+            {posts.filter(post => 
+              post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              (post.tags && post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())))
+            ).length > 0 ? (
               <div className="space-y-12">
-                {filteredPosts.map((post, index) => (
+                {posts.filter(post => 
+                  post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  (post.tags && post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())))
+                ).map((post, index) => (
                   <div 
                     key={post.id} 
                     className={`flex flex-col md:flex-row gap-8 reveal ${index < 3 ? `stagger-${index + 3}` : ''}`}

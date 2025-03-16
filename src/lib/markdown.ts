@@ -31,10 +31,16 @@ export function parseMarkdown(content: string) {
         const keyValMatch = line.match(/([^:]+):\s*\[(.*)\]/);
         if (keyValMatch && keyValMatch.length >= 3) {
           const key = keyValMatch[1].trim();
-          const value = keyValMatch[2];
-          frontMatter[key] = value
-            .split(',')
-            .map(item => item.trim().replace(/^["']|["']$/g, ''));
+          const valueStr = keyValMatch[2].trim();
+          
+          // Handle empty arrays
+          if (!valueStr) {
+            frontMatter[key] = [];
+          } else {
+            frontMatter[key] = valueStr
+              .split(',')
+              .map(item => item.trim().replace(/^["']|["']$/g, ''));
+          }
         }
       } else {
         // Handle regular key-value pairs
@@ -45,14 +51,16 @@ export function parseMarkdown(content: string) {
           const value = keyVal.slice(1).join(':').trim();
           
           // Process value based on its type
-          if (value.startsWith('"') && value.endsWith('"')) {
-            frontMatter[key] = value.slice(1, -1);
-          } else if (value === 'true') {
+          if (value.toLowerCase() === 'true') {
             frontMatter[key] = true;
-          } else if (value === 'false') {
+          } else if (value.toLowerCase() === 'false') {
             frontMatter[key] = false;
-          } else if (!isNaN(Number(value))) {
+          } else if (!isNaN(Number(value)) && value.trim() !== '') {
             frontMatter[key] = Number(value);
+          } else if (value === 'undefined' || value === '') {
+            frontMatter[key] = undefined;
+          } else if (value.startsWith('"') && value.endsWith('"')) {
+            frontMatter[key] = value.slice(1, -1);
           } else {
             frontMatter[key] = value;
           }
@@ -77,31 +85,23 @@ export function parseProjectMarkdown(content: string): Project {
     
     console.log("Project frontMatter:", frontMatter);
     
-    // Ensure slug is defined, fallback to id if not provided
-    const slug = frontMatter.slug || frontMatter.id || '';
-    
-    // Handle undefined liveUrl properly
-    const liveUrl = frontMatter.liveUrl && 
-      typeof frontMatter.liveUrl === 'object' && 
-      frontMatter.liveUrl._type === 'undefined' ? 
-      undefined : frontMatter.liveUrl;
-    
+    // Ensure all required fields have valid values
     return {
       id: frontMatter.id || '',
-      slug: slug,
+      slug: frontMatter.slug || frontMatter.id || '',
       title: frontMatter.title || '',
       description: frontMatter.description || '',
       content: markdownContent,
       featuredImage: frontMatter.featuredImage || '/placeholder.svg',
       technologies: Array.isArray(frontMatter.technologies) ? frontMatter.technologies : [],
-      githubUrl: frontMatter.githubUrl,
-      liveUrl: liveUrl,
+      githubUrl: frontMatter.githubUrl || undefined,
+      liveUrl: frontMatter.liveUrl || undefined,
       featured: Boolean(frontMatter.featured),
       date: frontMatter.date || '',
     };
   } catch (error) {
     console.error("Error parsing project markdown:", error);
-    throw error;
+    throw new Error(`Failed to parse project: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
@@ -112,12 +112,9 @@ export function parseBlogMarkdown(content: string): BlogPost {
     
     console.log("Blog frontMatter:", frontMatter);
     
-    // Ensure slug is defined, fallback to id if not provided
-    const slug = frontMatter.slug || frontMatter.id || '';
-    
     return {
       id: frontMatter.id || '',
-      slug: slug,
+      slug: frontMatter.slug || frontMatter.id || '',
       title: frontMatter.title || '',
       excerpt: frontMatter.excerpt || '',
       content: markdownContent,
@@ -130,6 +127,6 @@ export function parseBlogMarkdown(content: string): BlogPost {
     };
   } catch (error) {
     console.error("Error parsing blog markdown:", error);
-    throw error;
+    throw new Error(`Failed to parse blog post: ${error instanceof Error ? error.message : String(error)}`);
   }
 }

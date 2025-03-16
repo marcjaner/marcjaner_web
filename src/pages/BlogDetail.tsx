@@ -17,45 +17,49 @@ const BlogDetail = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      console.log("Loading blog post with slug:", slug);
-      
-      // This would eventually pull from a collection or API, but for now we're using a hard-coded list
-      const markdownContents = [airflowPost];
-      const parsedPosts: BlogPost[] = [];
-      
-      for (const content of markdownContents) {
-        try {
-          const post = parseBlogMarkdown(content);
-          console.log("Parsed blog post:", post);
-          if (post && post.id) {
-            parsedPosts.push(post);
+    const loadBlogPost = () => {
+      try {
+        console.log("Loading blog post with slug:", slug);
+        
+        // This would eventually pull from a collection or API, but for now we're using a hard-coded list
+        const markdownContents = [airflowPost];
+        const parsedPosts: BlogPost[] = [];
+        
+        for (const content of markdownContents) {
+          try {
+            const post = parseBlogMarkdown(content);
+            console.log("Parsed blog post:", post);
+            if (post && post.id) {
+              parsedPosts.push(post);
+            }
+          } catch (err) {
+            console.error("Error parsing individual blog post:", err);
           }
-        } catch (err) {
-          console.error("Error parsing individual blog post:", err);
         }
+        
+        const foundPost = parsedPosts.find(p => p.slug === slug);
+        
+        if (foundPost) {
+          console.log("Found matching post:", foundPost);
+          setPost(foundPost);
+          setError(null);
+        } else {
+          console.error("No post found with slug:", slug);
+          setError("Blog post not found");
+          // If post not found, redirect to blog listing after a short delay
+          setTimeout(() => {
+            navigate('/blog', { replace: true });
+          }, 3000);
+        }
+      } catch (error) {
+        console.error("Error loading blog post:", error);
+        setError("Failed to load blog post");
+      } finally {
+        setLoading(false);
       }
-      
-      const foundPost = parsedPosts.find(p => p.slug === slug);
-      
-      if (foundPost) {
-        console.log("Found matching post:", foundPost);
-        setPost(foundPost);
-        setError(null);
-      } else {
-        console.error("No post found with slug:", slug);
-        setError("Blog post not found");
-        // If post not found, redirect to blog listing after a short delay
-        setTimeout(() => {
-          navigate('/blog', { replace: true });
-        }, 3000);
-      }
-    } catch (error) {
-      console.error("Error loading blog post:", error);
-      setError("Failed to load blog post");
-    } finally {
-      setLoading(false);
-    }
+    };
+    
+    loadBlogPost();
   }, [slug, navigate]);
 
   if (loading) {

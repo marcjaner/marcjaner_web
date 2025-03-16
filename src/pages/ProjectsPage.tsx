@@ -16,45 +16,49 @@ const ProjectsPage = () => {
   const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
-    try {
-      console.log("Loading project markdown files...");
-      
-      // Parse the markdown files to get the project data
-      const markdownContents = [data1, data2];
-      const parsedProjects: Project[] = [];
-      
-      for (const content of markdownContents) {
-        try {
-          const project = parseProjectMarkdown(content);
-          console.log("Parsed project:", project);
-          if (project && project.id) {
-            parsedProjects.push(project);
+    const loadProjects = () => {
+      try {
+        console.log("Loading project markdown files...");
+        
+        // Parse the markdown files to get the project data
+        const markdownContents = [data1, data2];
+        const parsedProjects: Project[] = [];
+        
+        for (const content of markdownContents) {
+          try {
+            const project = parseProjectMarkdown(content);
+            console.log("Parsed project:", project);
+            if (project && project.id) {
+              parsedProjects.push(project);
+            }
+          } catch (err) {
+            console.error("Error parsing individual project:", err);
           }
-        } catch (err) {
-          console.error("Error parsing individual project:", err);
         }
+        
+        if (parsedProjects.length === 0) {
+          console.error("No projects could be loaded");
+          setError("No projects could be loaded");
+        } else {
+          // Sort projects by date (most recent first)
+          parsedProjects.sort((a, b) => {
+            if (!a.date || !b.date) return 0;
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+          });
+          console.log("Final parsed projects:", parsedProjects);
+          setProjects(parsedProjects);
+          setError(null);
+        }
+      } catch (error) {
+        console.error("Error loading projects:", error);
+        setError("Failed to load projects");
+        setProjects([]);
+      } finally {
+        setLoading(false);
       }
-      
-      if (parsedProjects.length === 0) {
-        console.error("No projects could be loaded");
-        setError("No projects could be loaded");
-      } else {
-        // Sort projects by date (most recent first)
-        parsedProjects.sort((a, b) => {
-          if (!a.date || !b.date) return 0;
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        });
-        console.log("Final parsed projects:", parsedProjects);
-        setProjects(parsedProjects);
-        setError(null);
-      }
-    } catch (error) {
-      console.error("Error loading projects:", error);
-      setError("Failed to load projects");
-      setProjects([]);
-    } finally {
-      setLoading(false);
-    }
+    };
+    
+    loadProjects();
   }, []);
 
   if (loading) {
