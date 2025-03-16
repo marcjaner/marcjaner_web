@@ -19,16 +19,32 @@ const ProjectDetail = () => {
       
       try {
         setLoading(true);
-        const response = await fetch(`/.netlify/functions/projects?slug=${slug}`);
+        
+        // Add a cache-busting parameter to prevent caching
+        const timestamp = new Date().getTime();
+        const response = await fetch(`/.netlify/functions/projects?slug=${slug}&_=${timestamp}`);
         
         if (!response.ok) {
           if (response.status === 404) {
             throw new Error('Project not found');
           }
-          throw new Error('Failed to fetch project details');
+          throw new Error(`Failed to fetch project details: ${response.status} ${response.statusText}`);
         }
         
-        const data = await response.json();
+        // Log the response text for debugging
+        const responseText = await response.text();
+        console.log('API Response (ProjectDetail):', responseText);
+        
+        // Try to parse the response as JSON
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Failed to parse response as JSON:', parseError);
+          console.error('Response text:', responseText);
+          throw new Error('Invalid JSON response from server');
+        }
+        
         setProject(data);
       } catch (error) {
         console.error("Error loading project:", error);

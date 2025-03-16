@@ -15,19 +15,35 @@ const ProjectsPage = () => {
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        const response = await fetch('/.netlify/functions/projects');
+        
+        // Add a cache-busting parameter to prevent caching of API responses
+        const timestamp = new Date().getTime();
+        const response = await fetch(`/.netlify/functions/projects?_=${timestamp}`);
         
         if (!response.ok) {
-          throw new Error('Failed to fetch projects');
+          throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
         }
         
-        const data = await response.json();
+        // Log the response text for debugging
+        const responseText = await response.text();
+        console.log('API Response:', responseText);
+        
+        // Try to parse the response as JSON
+        let data;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error('Failed to parse response as JSON:', parseError);
+          console.error('Response text:', responseText);
+          throw new Error('Invalid JSON response from server');
+        }
+        
         setProjects(data);
       } catch (error) {
         console.error("Error loading projects:", error);
         toast({
           title: "Error",
-          description: "Failed to load projects. Please try again later.",
+          description: error instanceof Error ? error.message : "Failed to load projects. Please try again later.",
           variant: "destructive",
         });
       } finally {
@@ -71,6 +87,10 @@ const ProjectsPage = () => {
                       src={project.featuredImage} 
                       alt={project.title}
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = '/placeholder.svg';
+                      }}
                     />
                   </div>
                   <CardHeader className="p-6 pb-2">
