@@ -1,13 +1,15 @@
 
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import React, { useEffect } from 'react';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+interface LayoutProps {
+  children: React.ReactNode;
 }
 
-export function initScrollReveal() {
-  if (typeof window !== 'undefined') {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
+  useEffect(() => {
+    // Implement scroll reveal animation
     const observerOptions = {
       root: null,
       rootMargin: '0px',
@@ -28,7 +30,17 @@ export function initScrollReveal() {
     return () => {
       revealElements.forEach(el => observer.unobserve(el));
     };
-  }
-  
-  return () => {};
-}
+  }, []);
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow pt-20">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default Layout;
