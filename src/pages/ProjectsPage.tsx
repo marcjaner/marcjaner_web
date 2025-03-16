@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, Github } from 'lucide-react';
@@ -20,7 +19,7 @@ const ProjectsPage = () => {
         const functionUrl = '/.netlify/functions/projects';
         console.log('Fetching projects from:', functionUrl);
         
-        // Add a cache-busting parameter to prevent caching of API responses
+        // Add a cache-busting parameter to prevent caching
         const timestamp = new Date().getTime();
         const response = await fetch(`${functionUrl}?_=${timestamp}`);
         
@@ -31,19 +30,7 @@ const ProjectsPage = () => {
           throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
         }
         
-        // Get response as text first to debug if needed
-        const responseText = await response.text();
-        console.log('Response text preview:', responseText.substring(0, 200));
-        
-        // Try to parse the response as JSON
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (error) {
-          console.error('JSON parse error:', error);
-          throw new Error(`Failed to parse response as JSON: ${error.message}`);
-        }
-        
+        const data = await response.json();
         setProjects(data);
       } catch (error) {
         console.error("Error loading projects:", error);

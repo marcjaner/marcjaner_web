@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Github, ExternalLink } from 'lucide-react';
@@ -38,19 +37,7 @@ const ProjectDetail = () => {
           throw new Error(`Failed to fetch project details: ${response.status} ${response.statusText}`);
         }
         
-        // Get response as text first to debug if needed
-        const responseText = await response.text();
-        console.log('Response text preview:', responseText.substring(0, 200));
-        
-        // Try to parse the response as JSON
-        let data;
-        try {
-          data = JSON.parse(responseText);
-        } catch (error) {
-          console.error('JSON parse error:', error);
-          throw new Error(`Failed to parse response as JSON: ${error.message}`);
-        }
-        
+        const data = await response.json();
         setProject(data);
       } catch (error) {
         console.error("Error loading project:", error);
