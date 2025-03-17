@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -137,15 +136,15 @@
   }
 
   .mobile-menu {
-    @apply backdrop-blur-lg;
+    @apply backdrop-blur-lg z-[99];
   }
   
   .dark .mobile-menu {
-    @apply bg-gradient-to-b from-background to-aquamarine-950/90;
+    @apply bg-gradient-to-b from-background/95 to-aquamarine-950/95;
   }
   
   .light .mobile-menu {
-    @apply bg-gradient-to-b from-white to-aquamarine-50/90;
+    @apply bg-gradient-to-b from-white/95 to-aquamarine-50/95;
   }
 }
 

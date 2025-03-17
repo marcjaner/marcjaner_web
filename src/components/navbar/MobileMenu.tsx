@@ -13,11 +13,14 @@ export const MobileMenu = ({ isOpen, toggleNav }: MobileMenuProps) => {
   return (
     <div 
       className={cn(
-        "fixed inset-0 bg-background/95 backdrop-blur-lg z-50 flex flex-col transition-all duration-300 transform",
+        "fixed inset-0 z-[100] transition-all duration-300 transform",
         isOpen ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
       )}
     >
-      <div className="container mx-auto px-6 py-6 flex justify-end">
+      {/* Dark overlay with blur effect */}
+      <div className="absolute inset-0 mobile-menu"></div>
+      
+      <div className="relative z-[101] container mx-auto px-6 py-6 flex justify-end">
         <button 
           onClick={toggleNav}
           className="p-2 focus:outline-none text-primary"
@@ -27,7 +30,7 @@ export const MobileMenu = ({ isOpen, toggleNav }: MobileMenuProps) => {
         </button>
       </div>
       
-      <div className="flex-1 flex flex-col items-center justify-center gap-10 p-8">
+      <div className="relative z-[101] flex-1 flex flex-col items-center justify-center gap-10 p-8">
         <Link 
           to="/projects" 
           className="text-3xl font-medium cursor-pointer hover:text-primary transition-colors"

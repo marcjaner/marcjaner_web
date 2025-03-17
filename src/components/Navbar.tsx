@@ -38,23 +38,25 @@ export const Navbar = () => {
   };
 
   return (
-    <header 
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        scrolled ? "py-3 glass-panel accent-glow" : "py-5 bg-transparent"
-      )}
-    >
-      <div className="container mx-auto px-6">
-        <nav className="flex items-center justify-between">
-          <Logo />
-          <DesktopNav />
-          <MobileNavToggle isOpen={isOpen} toggleNav={toggleNav} />
-        </nav>
-      </div>
+    <>
+      <header 
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+          scrolled ? "py-3 glass-panel accent-glow" : "py-5 bg-transparent"
+        )}
+      >
+        <div className="container mx-auto px-6">
+          <nav className="flex items-center justify-between">
+            <Logo />
+            <DesktopNav />
+            <MobileNavToggle isOpen={isOpen} toggleNav={toggleNav} />
+          </nav>
+        </div>
+      </header>
 
-      {/* Full-screen Mobile Menu with Close Button */}
-      {isMobile && <MobileMenu isOpen={isOpen} toggleNav={toggleNav} />}
-    </header>
+      {/* Moved the MobileMenu outside of the header to ensure it can have a proper z-index */}
+      <MobileMenu isOpen={isOpen} toggleNav={toggleNav} />
+    </>
   );
 };
 
