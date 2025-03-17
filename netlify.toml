@@ -1,0 +1,8 @@
+
+# netlify.toml
+# This file tells Netlify how to handle client-side routing
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
