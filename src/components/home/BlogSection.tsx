@@ -3,12 +3,29 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import BlogPostCard from './BlogPostCard';
-import { useBlogPosts } from '@/hooks/useBlogPosts';
 
 const BlogSection = () => {
-  const { data: posts, isLoading } = useBlogPosts();
-  
-  const featuredPosts = posts?.filter(post => post.featured).slice(0, 2) || [];
+  // Hardcoded blog posts
+  const featuredPosts = [
+    {
+      id: "1",
+      slug: "airflow-etl-pipelines",
+      title: "Building Robust ETL Pipelines with Apache Airflow",
+      excerpt: "Learn how to design and implement scalable data pipelines using Apache Airflow for complex ETL workflows.",
+      featuredImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      date: "April 15, 2023",
+      tags: ["Data Engineering", "ETL", "Apache Airflow"]
+    },
+    {
+      id: "2",
+      slug: "spark-data-processing",
+      title: "Optimizing Big Data Processing with Apache Spark",
+      excerpt: "Explore techniques to improve performance and efficiency when working with large-scale data using Spark.",
+      featuredImage: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+      date: "March 22, 2023",
+      tags: ["Big Data", "Apache Spark", "Performance"]
+    }
+  ];
 
   return (
     <section className="py-20 bg-secondary/30 dark:bg-secondary/10">
@@ -19,11 +36,7 @@ const BlogSection = () => {
           <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
         </div>
         
-        {isLoading ? (
-          <div className="text-center">
-            <p className="text-muted-foreground">Loading blog posts...</p>
-          </div>
-        ) : featuredPosts.length > 0 ? (
+        {featuredPosts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {featuredPosts.map((post, idx) => (
               <BlogPostCard key={post.id} post={post} index={idx + 1} />

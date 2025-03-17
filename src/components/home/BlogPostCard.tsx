@@ -3,7 +3,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Calendar, Clock } from 'lucide-react';
-import { BlogPost } from '@/types/collections';
+
+interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  featuredImage: string;
+  date: string;
+  tags?: string[];
+}
 
 interface BlogPostCardProps {
   post: BlogPost;

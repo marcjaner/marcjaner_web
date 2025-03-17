@@ -3,7 +3,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, Github } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Project } from '@/types/collections';
+
+interface Project {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  featuredImage: string;
+  technologies?: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+}
 
 interface ProjectCardProps {
   project: Project;

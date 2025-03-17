@@ -1,13 +1,57 @@
 
 import React from 'react';
-import { useBlogPosts } from '@/hooks/useBlogPosts';
-import { Card } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, Tag } from 'lucide-react';
 import BlogPostCard from '@/components/home/BlogPostCard';
 
 const BlogPage = () => {
-  const { data: posts, isLoading, error } = useBlogPosts();
+  // Hardcoded blog posts
+  const posts = [
+    {
+      id: "1",
+      slug: "airflow-etl-pipelines",
+      title: "Building Robust ETL Pipelines with Apache Airflow",
+      excerpt: "Learn how to design and implement scalable data pipelines using Apache Airflow for complex ETL workflows.",
+      featuredImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      date: "April 15, 2023",
+      readTime: "8 min read",
+      author: "Jane Doe",
+      tags: ["Data Engineering", "ETL", "Apache Airflow"]
+    },
+    {
+      id: "2",
+      slug: "spark-data-processing",
+      title: "Optimizing Big Data Processing with Apache Spark",
+      excerpt: "Explore techniques to improve performance and efficiency when working with large-scale data using Spark.",
+      featuredImage: "https://images.unsplash.com/photo-1518770660439-4636190af475",
+      date: "March 22, 2023",
+      readTime: "10 min read",
+      author: "John Smith",
+      tags: ["Big Data", "Apache Spark", "Performance"]
+    },
+    {
+      id: "3",
+      slug: "ml-model-deployment",
+      title: "Best Practices for Machine Learning Model Deployment",
+      excerpt: "Learn about the challenges and solutions for deploying ML models to production environments.",
+      featuredImage: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
+      date: "February 10, 2023",
+      readTime: "12 min read",
+      author: "Jane Doe",
+      tags: ["Machine Learning", "MLOps", "Deployment"]
+    },
+    {
+      id: "4",
+      slug: "data-lake-architecture",
+      title: "Modern Data Lake Architecture Design Patterns",
+      excerpt: "An overview of architectural patterns for building efficient and scalable data lakes.",
+      featuredImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+      date: "January 5, 2023",
+      readTime: "9 min read",
+      author: "Alex Chen",
+      tags: ["Data Architecture", "Data Lakes", "Big Data"]
+    }
+  ];
 
   // For blog page, we use a different layout with larger cards
   const renderBlogPostDetail = (post: any, index: number) => (
@@ -76,15 +120,7 @@ const BlogPage = () => {
           <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
         </div>
         
-        {isLoading ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Loading blog posts...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Error loading blog posts. Please try again later.</p>
-          </div>
-        ) : !posts || posts.length === 0 ? (
+        {posts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No blog posts found.</p>
           </div>

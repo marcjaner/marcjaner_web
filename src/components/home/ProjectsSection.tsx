@@ -3,12 +3,40 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import ProjectCard from './ProjectCard';
-import { useProjects } from '@/hooks/useProjects';
 
 const ProjectsSection = () => {
-  const { data: projects, isLoading } = useProjects();
-  
-  const featuredProjects = projects?.filter(project => project.featured).slice(0, 3) || [];
+  // Hardcoded projects
+  const featuredProjects = [
+    {
+      id: "1",
+      slug: "data-visualization-dashboard",
+      title: "Data Visualization Dashboard",
+      description: "An interactive dashboard for visualizing complex datasets with customizable charts and filters.",
+      featuredImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
+      technologies: ["React", "D3.js", "TypeScript"],
+      githubUrl: "https://github.com/username/data-viz-dashboard",
+      liveUrl: "https://data-viz-dashboard.example.com"
+    },
+    {
+      id: "2",
+      slug: "etl-pipeline-framework",
+      title: "ETL Pipeline Framework",
+      description: "A scalable framework for building and managing ETL workflows with monitoring and error handling.",
+      featuredImage: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+      technologies: ["Python", "Apache Airflow", "Docker"],
+      githubUrl: "https://github.com/username/etl-framework"
+    },
+    {
+      id: "3",
+      slug: "automated-ml-pipeline",
+      title: "Automated ML Pipeline",
+      description: "End-to-end machine learning pipeline with automated feature engineering and model selection.",
+      featuredImage: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
+      technologies: ["Python", "scikit-learn", "MLflow"],
+      githubUrl: "https://github.com/username/auto-ml-pipeline",
+      liveUrl: "https://auto-ml.example.com"
+    }
+  ];
 
   return (
     <section className="py-20">
@@ -19,11 +47,7 @@ const ProjectsSection = () => {
           <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
         </div>
         
-        {isLoading ? (
-          <div className="text-center">
-            <p className="text-muted-foreground">Loading projects...</p>
-          </div>
-        ) : featuredProjects.length > 0 ? (
+        {featuredProjects.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProjects.map((project, idx) => (
               <ProjectCard key={project.id} project={project} index={idx + 1} />
