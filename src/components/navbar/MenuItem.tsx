@@ -33,8 +33,8 @@ export const MenuItem = ({
       {label}
       <span
         className={cn(
-          `absolute bottom-0 left-1/2 -translate-x-1/2 ${underlineWidth} h-[1px] bg-primary transition-all duration-300 group-hover:opacity-100 opacity-0`,
-          isActive && "opacity-100 h-1"
+          `absolute bottom-0 left-1/2 -translate-x-1/2 ${underlineWidth} h-0.5 bg-primary transition-all duration-300 group-hover:opacity-100 opacity-0`,
+          isActive && "opacity-100 h-0.5"
         )}
       ></span>
     </Link>
