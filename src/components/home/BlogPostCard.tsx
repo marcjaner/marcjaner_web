@@ -12,7 +12,7 @@ const BlogPostCard = ({ id, className }: BlogPostCardProps) => {
   return (
     <div 
       className={cn(
-        "bg-card border border-border rounded-xl overflow-hidden hover-card reveal",
+        "bg-card border border-border rounded-xl overflow-hidden reveal transition-all duration-300 hover:shadow-md hover:-translate-y-0.5",
         `stagger-${id}`,
         className
       )}
