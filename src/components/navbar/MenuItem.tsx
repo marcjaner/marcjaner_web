@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -18,7 +17,7 @@ export const MenuItem = ({
   label,
   isActive,
   onClick,
-  underlineWidth = "w-1/2",
+  underlineWidth = "w-2/3",
   fontSize = "",
   textColor = "text-foreground/80",
 }: MenuItemProps) => {
