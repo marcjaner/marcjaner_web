@@ -12,8 +12,8 @@ export const DesktopNav = () => {
       <Link 
         to="/projects" 
         className={cn(
-          "link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer",
-          location.pathname.includes("/projects") && "text-foreground"
+          "link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer relative",
+          location.pathname.includes("/projects") && "text-foreground after:bg-primary after:w-full"
         )}
       >
         Projects
@@ -21,8 +21,8 @@ export const DesktopNav = () => {
       <Link 
         to="/blog" 
         className={cn(
-          "link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer",
-          location.pathname.includes("/blog") && "text-foreground"
+          "link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer relative",
+          location.pathname.includes("/blog") && "text-foreground after:bg-primary after:w-full"
         )}
       >
         Blog
@@ -30,8 +30,8 @@ export const DesktopNav = () => {
       <Link 
         to="/contact" 
         className={cn(
-          "link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer",
-          location.pathname === "/contact" && "text-foreground"
+          "link-underline font-medium text-foreground/80 hover:text-foreground cursor-pointer relative",
+          location.pathname === "/contact" && "text-foreground after:bg-primary after:w-full"
         )}
       >
         Contact

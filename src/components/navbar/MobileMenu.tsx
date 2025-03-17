@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -10,6 +10,8 @@ interface MobileMenuProps {
 }
 
 export const MobileMenu = ({ isOpen, toggleNav }: MobileMenuProps) => {
+  const location = useLocation();
+
   return (
     <div 
       className={cn(
@@ -33,24 +35,45 @@ export const MobileMenu = ({ isOpen, toggleNav }: MobileMenuProps) => {
       <div className="relative z-[101] flex-1 flex flex-col items-center justify-center gap-10 p-8">
         <Link 
           to="/projects" 
-          className="text-3xl font-medium cursor-pointer hover:text-primary transition-colors"
+          className={cn(
+            "text-3xl font-medium cursor-pointer hover:text-primary transition-colors relative group",
+            location.pathname.includes("/projects") && "text-primary"
+          )}
           onClick={toggleNav}
         >
           Projects
+          <span className={cn(
+            "absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full",
+            location.pathname.includes("/projects") && "w-full"
+          )}></span>
         </Link>
         <Link 
           to="/blog" 
-          className="text-3xl font-medium cursor-pointer hover:text-primary transition-colors"
+          className={cn(
+            "text-3xl font-medium cursor-pointer hover:text-primary transition-colors relative group",
+            location.pathname.includes("/blog") && "text-primary"
+          )}
           onClick={toggleNav}
         >
           Blog
+          <span className={cn(
+            "absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full",
+            location.pathname.includes("/blog") && "w-full"
+          )}></span>
         </Link>
         <Link 
           to="/contact" 
-          className="text-3xl font-medium cursor-pointer hover:text-primary transition-colors"
+          className={cn(
+            "text-3xl font-medium cursor-pointer hover:text-primary transition-colors relative group",
+            location.pathname === "/contact" && "text-primary"
+          )}
           onClick={toggleNav}
         >
           Contact
+          <span className={cn(
+            "absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full",
+            location.pathname === "/contact" && "w-full"
+          )}></span>
         </Link>
         <Link 
           to="/newsletter" 
