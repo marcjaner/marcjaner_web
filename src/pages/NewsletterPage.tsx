@@ -68,7 +68,7 @@ const NewsletterPage = () => {
                     <label htmlFor="email" className="block text-sm font-medium mb-2">
                       Email Address
                     </label>
-                    <div className="flex">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <div className="relative flex-grow">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                           <Mail className="text-aquamarine-400" size={18} />
@@ -78,7 +78,7 @@ const NewsletterPage = () => {
                           id="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-black/50 border border-aquamarine-700/30 rounded-l-md pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-aquamarine-500/30"
+                          className="w-full bg-black/50 border border-aquamarine-700/30 rounded-md sm:rounded-l-md sm:rounded-r-none pl-10 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-aquamarine-500/30"
                           placeholder="your@email.com"
                           required
                         />
@@ -86,7 +86,7 @@ const NewsletterPage = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="bg-aquamarine-500 text-black font-medium px-6 py-3 rounded-r-md hover:bg-aquamarine-400 transition-colors disabled:opacity-70"
+                        className="bg-aquamarine-500 text-black font-medium px-6 py-3 rounded-md sm:rounded-l-none sm:rounded-r-md hover:bg-aquamarine-400 transition-colors disabled:opacity-70"
                       >
                         {isSubmitting ? 'Subscribing...' : 'Subscribe'}
                       </button>
