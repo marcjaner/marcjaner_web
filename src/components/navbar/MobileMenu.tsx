@@ -43,8 +43,8 @@ export const MobileMenu = ({ isOpen, toggleNav }: MobileMenuProps) => {
         >
           Projects
           <span className={cn(
-            "absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full",
-            location.pathname.includes("/projects") && "w-full"
+            "absolute bottom-0 left-1/2 -translate-x-1/2 w-1/3 h-0.5 bg-primary transition-all duration-300 group-hover:opacity-100 opacity-0",
+            location.pathname.includes("/projects") && "opacity-100 h-1"
           )}></span>
         </Link>
         <Link 
@@ -57,8 +57,8 @@ export const MobileMenu = ({ isOpen, toggleNav }: MobileMenuProps) => {
         >
           Blog
           <span className={cn(
-            "absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full",
-            location.pathname.includes("/blog") && "w-full"
+            "absolute bottom-0 left-1/2 -translate-x-1/2 w-1/3 h-0.5 bg-primary transition-all duration-300 group-hover:opacity-100 opacity-0",
+            location.pathname.includes("/blog") && "opacity-100 h-1"
           )}></span>
         </Link>
         <Link 
@@ -71,8 +71,8 @@ export const MobileMenu = ({ isOpen, toggleNav }: MobileMenuProps) => {
         >
           Contact
           <span className={cn(
-            "absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full",
-            location.pathname === "/contact" && "w-full"
+            "absolute bottom-0 left-1/2 -translate-x-1/2 w-1/3 h-0.5 bg-primary transition-all duration-300 group-hover:opacity-100 opacity-0",
+            location.pathname === "/contact" && "opacity-100 h-1"
           )}></span>
         </Link>
         <Link 

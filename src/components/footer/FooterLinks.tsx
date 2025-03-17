@@ -32,10 +32,10 @@ export const FooterLinks = () => {
           >
             {link.label}
             <span className={cn(
-              "absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full",
+              "absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-primary transition-all duration-300 group-hover:opacity-100 opacity-0",
               (location.pathname === link.to || 
                (link.to !== "/" && location.pathname.includes(link.to))) && 
-               "w-full"
+               "opacity-100 h-1"
             )}></span>
           </Link>
         </li>
