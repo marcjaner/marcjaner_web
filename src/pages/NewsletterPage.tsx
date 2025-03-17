@@ -68,7 +68,7 @@ const NewsletterPage = () => {
                     <label htmlFor="email" className="block text-sm font-medium mb-2">
                       Email Address
                     </label>
-                    <div className="flex flex-col sm:flex-row gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-0">
                       <div className="relative flex-grow">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                           <Mail className="text-aquamarine-400" size={18} />
