@@ -1,67 +1,91 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import ProjectCard from './ProjectCard';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import ProjectCard from "./ProjectCard";
+import { useProjects } from "@/hooks/useProjects";
 
 const ProjectsSection = () => {
-  // Hardcoded projects
-  const featuredProjects = [
-    {
-      id: "1",
-      slug: "data-visualization-dashboard",
-      title: "Data Visualization Dashboard",
-      description: "An interactive dashboard for visualizing complex datasets with customizable charts and filters.",
-      featuredImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
-      technologies: ["React", "D3.js", "TypeScript"],
-      githubUrl: "https://github.com/username/data-viz-dashboard",
-      liveUrl: "https://data-viz-dashboard.example.com"
-    },
-    {
-      id: "2",
-      slug: "etl-pipeline-framework",
-      title: "ETL Pipeline Framework",
-      description: "A scalable framework for building and managing ETL workflows with monitoring and error handling.",
-      featuredImage: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
-      technologies: ["Python", "Apache Airflow", "Docker"],
-      githubUrl: "https://github.com/username/etl-framework"
-    },
-    {
-      id: "3",
-      slug: "automated-ml-pipeline",
-      title: "Automated ML Pipeline",
-      description: "End-to-end machine learning pipeline with automated feature engineering and model selection.",
-      featuredImage: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
-      technologies: ["Python", "scikit-learn", "MLflow"],
-      githubUrl: "https://github.com/username/auto-ml-pipeline",
-      liveUrl: "https://auto-ml.example.com"
-    }
-  ];
+  const { data: projects, isLoading } = useProjects();
+  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+  const [isButtonVisible, setIsButtonVisible] = useState(false);
+
+  // Ensure animations work on both initial load and page reload
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const headerTimer = setTimeout(() => {
+      setIsHeaderVisible(true);
+    }, 100);
+
+    const buttonTimer = setTimeout(() => {
+      setIsButtonVisible(true);
+    }, 800);
+
+    return () => {
+      clearTimeout(headerTimer);
+      clearTimeout(buttonTimer);
+    };
+  }, []);
+
+  // Get the featured projects, ensuring we have a valid array
+  const featuredProjects =
+    projects && projects.length > 0
+      ? projects
+          .filter((project) => project.featured)
+          .slice(0, 3)
+          .map((project) => ({
+            id: project.id,
+            slug: project.slug,
+            title: project.title,
+            description: project.description,
+            featuredImage: project.featuredImage,
+            technologies: project.technologies || [],
+            githubUrl: project.githubUrl,
+            liveUrl: project.liveUrl,
+          }))
+      : [];
 
   return (
     <section className="py-20">
       <div className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto mb-12 text-center reveal">
+        <div
+          className={`max-w-4xl mx-auto mb-12 text-center transition-all duration-700 ${
+            isHeaderVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
+        >
           <h2 className="text-3xl font-bold mb-4">Featured Projects</h2>
-          <p className="text-muted-foreground">A selection of my latest work and side projects</p>
+          <p className="text-muted-foreground">
+            A selection of my latest work and side projects
+          </p>
           <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
         </div>
-        
-        {featuredProjects.length > 0 ? (
+
+        {isLoading ? (
+          <div className="text-center mb-8">
+            <p className="text-muted-foreground">Loading projects...</p>
+          </div>
+        ) : !featuredProjects || featuredProjects.length === 0 ? (
+          <div className="text-center mb-8">
+            <p className="text-muted-foreground">No projects found.</p>
+          </div>
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {featuredProjects.map((project, idx) => (
               <ProjectCard key={project.id} project={project} index={idx + 1} />
             ))}
           </div>
-        ) : (
-          <div className="text-center mb-8">
-            <p className="text-muted-foreground">No projects found.</p>
-          </div>
         )}
-        
-        <div className="text-center mt-12 reveal">
-          <Link 
-            to="/projects" 
+
+        <div
+          className={`text-center mt-12 transition-all duration-700 ${
+            isButtonVisible
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-10"
+          }`}
+        >
+          <Link
+            to="/projects"
             className="inline-flex items-center gap-2 bg-secondary px-6 py-3 rounded-md hover:bg-secondary/80 transition-colors"
           >
             View All Projects <ArrowRight size={16} />

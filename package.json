@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "netlify:dev": "netlify dev",
-    "prebuild": "node scripts/generate-blog-manifest.js"
+    "prebuild": "node scripts/generate-blog-manifest.js && node scripts/generate-project-manifest.js",
+    "generate:manifests": "node scripts/generate-blog-manifest.js && node scripts/generate-project-manifest.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
