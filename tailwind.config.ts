@@ -1,5 +1,5 @@
-
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -64,17 +64,17 @@ export default {
         },
         // Add aquamarine color palette
         aquamarine: {
-          '50': '#eefff4',
-          '100': '#d7ffe8',
-          '200': '#b2ffd3',
-          '300': '#8affbd',
-          '400': '#33f588',
-          '500': '#09de67',
-          '600': '#01b852',
-          '700': '#059043',
-          '800': '#0a7139',
-          '900': '#0a5d31',
-          '950': '#003419',
+          "50": "#eefff4",
+          "100": "#d7ffe8",
+          "200": "#b2ffd3",
+          "300": "#8affbd",
+          "400": "#33f588",
+          "500": "#09de67",
+          "600": "#01b852",
+          "700": "#059043",
+          "800": "#0a7139",
+          "900": "#0a5d31",
+          "950": "#003419",
         },
       },
       borderRadius: {
@@ -120,19 +120,23 @@ export default {
         "fade-in": "fadeIn 0.5s ease-out forwards",
         "slide-up": "slideUp 0.5s ease-out forwards",
         "slide-right": "slideRight 0.5s ease-out forwards",
-        "wave": "wave 2.5s infinite",
+        wave: "wave 2.5s infinite",
       },
       fontFamily: {
         sans: ["SF Pro Display", "system-ui", "sans-serif"],
         mono: ["SF Mono", "monospace"],
       },
       backgroundImage: {
-        "gradient-subtle": "linear-gradient(109.6deg, rgba(223,234,247,1) 11.2%, rgba(244,248,252,1) 91.1%)",
-        "gradient-subtle-dark": "linear-gradient(to right, #243949 0%, #517fa4 100%)",
-        "gradient-aquamarine": "linear-gradient(to bottom, #eefff4 0%, #d7ffe8 100%)",
-        "gradient-aquamarine-dark": "linear-gradient(to bottom, #003419 0%, #0a5d31 100%)",
+        "gradient-subtle":
+          "linear-gradient(109.6deg, rgba(223,234,247,1) 11.2%, rgba(244,248,252,1) 91.1%)",
+        "gradient-subtle-dark":
+          "linear-gradient(to right, #243949 0%, #517fa4 100%)",
+        "gradient-aquamarine":
+          "linear-gradient(to bottom, #eefff4 0%, #d7ffe8 100%)",
+        "gradient-aquamarine-dark":
+          "linear-gradient(to bottom, #003419 0%, #0a5d31 100%)",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 } satisfies Config;

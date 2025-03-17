@@ -1,6 +1,23 @@
-
 # netlify.toml
-# This file tells Netlify how to handle client-side routing
+
+[build]
+  functions = "netlify/functions"
+  publish = "dist"
+  command = "npm run build"
+
+[dev]
+  framework = "vite"
+  targetPort = 8082
+  port = 8888
+  functionsPort = 9999
+  publish = "public"
+  command = "npm run dev"
+  autoLaunch = false
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 
 [[redirects]]
   from = "/*"

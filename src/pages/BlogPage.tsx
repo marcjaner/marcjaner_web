@@ -1,74 +1,80 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Calendar, Clock, Tag } from "lucide-react";
+import { useBlogPosts } from "@/hooks/useBlogPosts";
+import type { MarkdownMeta } from "@/lib/markdown";
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Calendar, Clock, Tag } from 'lucide-react';
-import BlogPostCard from '@/components/home/BlogPostCard';
+const getImageUrl = (path: string) => {
+  // If the path is already a full URL, return it as is
+  if (path.startsWith("http")) {
+    return path;
+  }
+  // In development, use the Netlify Dev server URL
+  if (import.meta.env.DEV) {
+    return `http://localhost:8888${path}`;
+  }
+  // In production, use relative path (it will be relative to the deployed domain)
+  return path;
+};
 
 const BlogPage = () => {
-  // Hardcoded blog posts
-  const posts = [
-    {
-      id: "1",
-      slug: "airflow-etl-pipelines",
-      title: "Building Robust ETL Pipelines with Apache Airflow",
-      excerpt: "Learn how to design and implement scalable data pipelines using Apache Airflow for complex ETL workflows.",
-      featuredImage: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
-      date: "April 15, 2023",
-      readTime: "8 min read",
-      author: "Jane Doe",
-      tags: ["Data Engineering", "ETL", "Apache Airflow"]
-    },
-    {
-      id: "2",
-      slug: "spark-data-processing",
-      title: "Optimizing Big Data Processing with Apache Spark",
-      excerpt: "Explore techniques to improve performance and efficiency when working with large-scale data using Spark.",
-      featuredImage: "https://images.unsplash.com/photo-1518770660439-4636190af475",
-      date: "March 22, 2023",
-      readTime: "10 min read",
-      author: "John Smith",
-      tags: ["Big Data", "Apache Spark", "Performance"]
-    },
-    {
-      id: "3",
-      slug: "ml-model-deployment",
-      title: "Best Practices for Machine Learning Model Deployment",
-      excerpt: "Learn about the challenges and solutions for deploying ML models to production environments.",
-      featuredImage: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
-      date: "February 10, 2023",
-      readTime: "12 min read",
-      author: "Jane Doe",
-      tags: ["Machine Learning", "MLOps", "Deployment"]
-    },
-    {
-      id: "4",
-      slug: "data-lake-architecture",
-      title: "Modern Data Lake Architecture Design Patterns",
-      excerpt: "An overview of architectural patterns for building efficient and scalable data lakes.",
-      featuredImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6",
-      date: "January 5, 2023",
-      readTime: "9 min read",
-      author: "Alex Chen",
-      tags: ["Data Architecture", "Data Lakes", "Big Data"]
-    }
-  ];
+  const { data: posts, isLoading: loading, error, refetch } = useBlogPosts();
+  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
+  const [postsVisibility, setPostsVisibility] = useState<boolean[]>([]);
 
-  // For blog page, we use a different layout with larger cards
-  const renderBlogPostDetail = (post: any, index: number) => (
-    <div 
-      key={post.id} 
-      className={`flex flex-col md:flex-row gap-8 reveal ${index < 3 ? `stagger-${index + 3}` : ''}`}
+  // Ensure animations work on both initial load and page reload
+  useEffect(() => {
+    // Small delay to ensure DOM is ready
+    const headerTimer = setTimeout(() => {
+      setIsHeaderVisible(true);
+    }, 100);
+
+    return () => clearTimeout(headerTimer);
+  }, []);
+
+  // Set up post visibility when posts data changes
+  useEffect(() => {
+    if (posts && posts.length > 0) {
+      // Initialize all posts as invisible
+      const initialVisibility = Array(posts.length).fill(false);
+      setPostsVisibility(initialVisibility);
+
+      // Stagger the appearance of each post
+      posts.forEach((_, index) => {
+        setTimeout(() => {
+          setPostsVisibility((prev) => {
+            const newVisibility = [...prev];
+            newVisibility[index] = true;
+            return newVisibility;
+          });
+        }, 300 + index * 150);
+      });
+    }
+  }, [posts]);
+
+  const renderBlogPostDetail = (post: MarkdownMeta, index: number) => (
+    <div
+      key={post.slug}
+      className={`flex flex-col md:flex-row gap-8 transition-all duration-700 ${
+        postsVisibility[index]
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-10"
+      }`}
     >
       <div className="md:w-1/3">
         <div className="aspect-[4/3] rounded-xl overflow-hidden bg-muted">
           <Link to={`/blog/${post.slug}`}>
-            <img 
-              src={post.featuredImage} 
+            <img
+              src={
+                post.featuredImage
+                  ? getImageUrl(post.featuredImage)
+                  : "/placeholder.svg"
+              }
               alt={post.title}
               className="w-full h-full object-cover"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                target.src = '/placeholder.svg';
+                target.src = "/placeholder.svg";
               }}
             />
           </Link>
@@ -76,58 +82,121 @@ const BlogPage = () => {
       </div>
       <div className="md:w-2/3">
         <div className="flex flex-wrap gap-2 mb-3">
-          {post.tags && post.tags.map((tag: string, i: number) => (
-            <span 
-              key={i} 
-              className="inline-flex items-center gap-1 text-xs font-medium bg-secondary px-2 py-1 rounded"
-            >
-              <Tag size={12} /> {tag}
-            </span>
-          ))}
+          {post.tags &&
+            post.tags.map((tag: string, i: number) => (
+              <span
+                key={i}
+                className="inline-flex items-center gap-1 text-xs font-medium bg-secondary px-2 py-1 rounded"
+              >
+                <Tag size={12} /> {tag}
+              </span>
+            ))}
         </div>
         <h2 className="text-2xl font-bold mb-3">
-          <Link 
-            to={`/blog/${post.slug}`} 
+          <Link
+            to={`/blog/${post.slug}`}
             className="hover:text-primary transition-colors"
           >
             {post.title}
           </Link>
         </h2>
-        <p className="text-muted-foreground mb-4">
-          {post.excerpt}
-        </p>
+        <p className="text-muted-foreground mb-4">{post.description}</p>
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
-            <Calendar size={14} /> {post.date}
+            <Calendar size={14} />{" "}
+            {new Date(post.date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </div>
-          <div className="flex items-center gap-1">
-            <Clock size={14} /> {post.readTime}
-          </div>
+          {post.readTime && (
+            <div className="flex items-center gap-1">
+              <Clock size={14} /> {post.readTime}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 
+  // Always show the header section, even during loading
+  const headerSection = (
+    <div
+      className={`max-w-4xl mx-auto mb-16 text-center transition-all duration-700 ${
+        isHeaderVisible
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-10"
+      }`}
+    >
+      <h1 className="text-4xl font-bold mb-6">Blog</h1>
+      <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+        Thoughts, tutorials, and insights on data engineering, software
+        development, and technology.
+      </p>
+      <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          {headerSection}
+          <div className="text-center">
+            <p className="text-muted-foreground">Loading posts...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          {headerSection}
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4">Error Loading Posts</h2>
+            <p className="text-muted-foreground mb-4">
+              {error instanceof Error ? error.message : "Failed to fetch posts"}
+            </p>
+            <button
+              onClick={() => refetch()}
+              className="text-primary hover:underline"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Ensure posts is a valid array
+  const validPosts = posts && posts.length > 0 ? [...posts] : [];
+
   return (
     <section className="py-20">
       <div className="container mx-auto px-6">
-        <div className="max-w-4xl mx-auto mb-16 text-center reveal">
-          <h1 className="text-4xl font-bold mb-6">Blog</h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Thoughts, tutorials, and insights on data engineering, software development,
-            and technology.
-          </p>
-          <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
-        </div>
-        
-        {posts.length === 0 ? (
+        {headerSection}
+
+        {validPosts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No blog posts found.</p>
+            <button
+              onClick={() => refetch()}
+              className="text-primary hover:underline mt-4"
+            >
+              Refresh
+            </button>
           </div>
         ) : (
           <div className="max-w-4xl mx-auto">
             <div className="space-y-12">
-              {posts.map((post, index) => renderBlogPostDetail(post, index))}
+              {validPosts.map((post, index) =>
+                renderBlogPostDetail(post, index)
+              )}
             </div>
           </div>
         )}

@@ -1,81 +1,98 @@
+import { useQuery } from "@tanstack/react-query";
+import type { MarkdownMeta } from "@/lib/markdown";
 
-import { useQuery } from '@tanstack/react-query';
-import { BlogPost } from '@/types/collections';
-import { parseBlogMarkdown } from '@/lib/markdown';
+interface BlogPostResponse {
+  title: string;
+  date: string;
+  description: string;
+  slug: string;
+  featuredImage: string;
+  author: string;
+  readTime: string;
+  tags: string[];
+  content?: string;
+}
 
-// Import blog content files
-import airflowEtlContent from '@/content/blog/airflow-etl-pipelines.md?raw';
-
-// Fallback data in case API fails
-const blogFiles = [
-  airflowEtlContent
-];
+const NETLIFY_DEV_URL = "http://localhost:8888";
+const getBaseUrl = () => (import.meta.env.DEV ? NETLIFY_DEV_URL : "");
 
 export function useBlogPosts() {
-  return useQuery({
-    queryKey: ['blogPosts'],
-    queryFn: async (): Promise<BlogPost[]> => {
+  return useQuery<MarkdownMeta[]>({
+    queryKey: ["blogPosts"],
+    queryFn: async () => {
       try {
-        // Try to fetch from API
-        const response = await fetch('/.netlify/functions/blog');
-        
-        if (response.ok) {
-          return await response.json();
+        const baseUrl = getBaseUrl();
+        console.log(
+          "Fetching blog posts from:",
+          `${baseUrl}/.netlify/functions/blog`
+        );
+
+        const response = await fetch(`${baseUrl}/.netlify/functions/blog`);
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch blog posts: ${response.statusText}`);
         }
-        
-        // Fallback to local files if API fails
-        console.log('API request failed, using local files');
-        return blogFiles
-          .map(content => parseBlogMarkdown(content));
+
+        const posts: BlogPostResponse[] = await response.json();
+        console.log("Received posts:", posts);
+
+        // Create a new array with spread operator to ensure it's a proper array
+        return [...posts].map((post) => ({
+          title: post.title,
+          date: post.date,
+          description: post.description,
+          slug: post.slug,
+          featuredImage: post.featuredImage,
+          author: post.author,
+          readTime: post.readTime,
+          tags: post.tags,
+        }));
       } catch (error) {
-        console.error('Error fetching blog posts:', error);
-        
-        // Fallback to local files
-        return blogFiles
-          .map(content => parseBlogMarkdown(content));
+        console.error("Error fetching blog posts:", error);
+        throw error;
       }
-    }
+    },
+    // Use more reasonable stale time since blog posts don't change often
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnMount: true,
+    refetchOnWindowFocus: false, // Don't refetch on window focus to avoid unnecessary requests
   });
 }
 
 export function useBlogPost(slug: string | undefined) {
-  return useQuery({
-    queryKey: ['blogPost', slug],
-    queryFn: async (): Promise<BlogPost | null> => {
+  return useQuery<BlogPostResponse | null>({
+    queryKey: ["blogPost", slug],
+    queryFn: async () => {
       if (!slug) return null;
-      
+
       try {
-        // Try to fetch from API
-        const response = await fetch(`/.netlify/functions/blog?slug=${slug}`);
-        
-        if (response.ok) {
-          return await response.json();
+        const baseUrl = getBaseUrl();
+        console.log(
+          "Fetching blog post from:",
+          `${baseUrl}/.netlify/functions/blog?slug=${slug}`
+        );
+
+        const response = await fetch(
+          `${baseUrl}/.netlify/functions/blog?slug=${slug}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch blog post: ${response.statusText}`);
         }
-        
-        // Fallback to local files if API fails
-        console.log('API request failed, using local files');
-        const allFiles = {
-          'airflow-etl-pipelines': airflowEtlContent,
-        };
-        
-        const content = allFiles[slug as keyof typeof allFiles];
-        if (!content) return null;
-        
-        return parseBlogMarkdown(content);
+
+        const post = await response.json();
+        console.log("Received post:", post);
+        return post;
       } catch (error) {
-        console.error('Error fetching blog post:', error);
-        
-        // Fallback to local files
-        const allFiles = {
-          'airflow-etl-pipelines': airflowEtlContent,
-        };
-        
-        const content = allFiles[slug as keyof typeof allFiles];
-        if (!content) return null;
-        
-        return parseBlogMarkdown(content);
+        console.error("Error fetching blog post:", error);
+        throw error;
       }
     },
-    enabled: !!slug
+    enabled: !!slug,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
 }

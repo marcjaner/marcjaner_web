@@ -1,103 +1,114 @@
 // Netlify function to serve blog post data from markdown files
-const fs = require('fs');
-const path = require('path');
-const matter = require('gray-matter');
+import matter from "gray-matter";
 
-// Helper to read markdown files
-const getBlogFiles = () => {
-  const blogDir = path.join(__dirname, '../../src/content/blog');
-  return fs.readdirSync(blogDir).filter(file => file.endsWith('.md'));
+const getBaseUrl = () => {
+  if (process.env.NETLIFY_DEV) {
+    return "http://localhost:8888";
+  }
+  return process.env.URL || "";
 };
 
-// Parse a markdown file and extract frontmatter + content
-const parseBlogFile = (fileName) => {
-  const filePath = path.join(__dirname, '../../src/content/blog', fileName);
-  const fileContent = fs.readFileSync(filePath, 'utf8');
-  
-  const { data, content } = matter(fileContent);
-  
+// Helper to fetch markdown content
+const fetchMarkdownContent = async (slug) => {
+  const baseUrl = getBaseUrl();
+  const response = await fetch(`${baseUrl}/content/blog/${slug}.md`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${slug}.md`);
+  }
+  return response.text();
+};
+
+// Helper to get list of blog files
+const getBlogFiles = async () => {
+  const baseUrl = getBaseUrl();
+  const response = await fetch(`${baseUrl}/content/blog-manifest.json`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch blog manifest");
+  }
+  const manifest = await response.json();
+  return manifest.files.map((file) => file.replace(".md", ""));
+};
+
+// Parse markdown content
+const parseBlogContent = (content, slug) => {
+  const { data: meta, content: markdownContent } = matter(content);
   return {
-    id: data.id || '',
-    slug: data.slug || fileName.replace('.md', ''),
-    title: data.title || '',
-    excerpt: data.excerpt || '',
-    content: content,
-    featuredImage: data.featuredImage || '/placeholder.svg',
-    author: data.author || '',
-    date: data.date || '',
-    readTime: data.readTime || '',
-    tags: Array.isArray(data.tags) ? data.tags : [],
-    featured: Boolean(data.featured),
+    title: meta.title,
+    date: meta.date,
+    description: meta.description,
+    slug,
+    featuredImage: meta.featuredImage,
+    author: meta.author,
+    readTime: meta.readTime,
+    tags: Array.isArray(meta.tags) ? meta.tags : [],
+    content: markdownContent,
   };
 };
 
-exports.handler = async (event) => {
-  // Define CORS headers
+export const handler = async (event) => {
   const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Content-Type': 'application/json'
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Content-Type": "application/json",
   };
-  
-  // Handle OPTIONS request for CORS preflight
-  if (event.httpMethod === 'OPTIONS') {
+
+  if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 204,
       headers,
-      body: ''
+      body: "",
     };
   }
-  
+
   try {
     const { slug } = event.queryStringParameters || {};
-    
-    // If slug is provided, return a single blog post
+    const slugs = await getBlogFiles();
+
     if (slug) {
-      const blogFiles = getBlogFiles();
-      const matchingFile = blogFiles.find(file => 
-        file.replace('.md', '') === slug || 
-        file === `${slug}.md`
-      );
-      
-      if (!matchingFile) {
+      if (!slugs.includes(slug)) {
         return {
           statusCode: 404,
           headers,
-          body: JSON.stringify({ error: 'Blog post not found' }),
+          body: JSON.stringify({ error: "Blog post not found" }),
         };
       }
-      
-      const post = parseBlogFile(matchingFile);
-      
+
+      const content = await fetchMarkdownContent(slug);
+      const post = parseBlogContent(content, slug);
+
       return {
         statusCode: 200,
         headers,
         body: JSON.stringify(post),
       };
     }
-    
-    // Otherwise, return all blog posts (without content for list view)
-    const blogFiles = getBlogFiles();
-    
-    const posts = blogFiles
-      .map(file => parseBlogFile(file))
-      .map(post => {
-        // Don't include full content in list view
-        const { content, ...postWithoutContent } = post;
-        return postWithoutContent;
-      });
-    
+
+    // Get all blog posts metadata
+    const posts = await Promise.all(
+      slugs.map(async (slug) => {
+        const content = await fetchMarkdownContent(slug);
+        const { content: _, ...meta } = parseBlogContent(content, slug);
+        return meta;
+      })
+    );
+
+    // Sort by date
+    posts.sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify(posts),
     };
   } catch (error) {
+    console.error("Error processing blog posts:", error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify({ error: 'Failed to load blog posts' }),
+      body: JSON.stringify({ error: error.message }),
     };
   }
 };
