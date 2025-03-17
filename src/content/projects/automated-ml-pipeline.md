@@ -2,7 +2,7 @@
 ---
 id: "3"
 slug: "automated-ml-pipeline"
-title: "Automated ML Pipeline"
+title: "Automated ML Pipeline II"
 description: "An end-to-end machine learning pipeline with automated feature engineering and model selection."
 featuredImage: "/placeholder.svg"
 technologies: ["Python", "Scikit-learn", "MLflow", "FastAPI"]
