@@ -1,6 +1,8 @@
+
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { BlogPost, Project } from "@/types/collections";
 
 type ContentType = "blog" | "projects";
 
@@ -56,5 +58,43 @@ export function getContentBySlug(
       slug,
     },
     content,
+  };
+}
+
+// Parse markdown content for blog posts
+export function parseBlogMarkdown(content: string): BlogPost {
+  const { data, content: markdownContent } = matter(content);
+  
+  return {
+    id: data.id || Math.random().toString(36).substring(2, 9),
+    slug: data.slug || '',
+    title: data.title || 'Untitled Post',
+    excerpt: data.excerpt || data.description || '',
+    content: markdownContent || '',
+    featuredImage: data.featuredImage || 'https://source.unsplash.com/random/800x600/?data',
+    author: data.author || 'Anonymous',
+    date: data.date || new Date().toLocaleDateString(),
+    readTime: data.readTime || `${Math.ceil(markdownContent.length / 1500)} min read`,
+    tags: Array.isArray(data.tags) ? data.tags : data.tags ? [data.tags] : [],
+    featured: data.featured || false,
+  };
+}
+
+// Parse markdown content for projects
+export function parseProjectMarkdown(content: string): Project {
+  const { data, content: markdownContent } = matter(content);
+  
+  return {
+    id: data.id || Math.random().toString(36).substring(2, 9),
+    slug: data.slug || '',
+    title: data.title || 'Untitled Project',
+    description: data.description || '',
+    content: markdownContent || '',
+    featuredImage: data.featuredImage || 'https://source.unsplash.com/random/800x600/?code',
+    technologies: Array.isArray(data.technologies) ? data.technologies : data.technologies ? [data.technologies] : [],
+    githubUrl: data.githubUrl || '',
+    liveUrl: data.liveUrl || '',
+    featured: data.featured || false,
+    date: data.date || new Date().toLocaleDateString(),
   };
 }

@@ -1,14 +1,10 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ExternalLink, Github } from 'lucide-react';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { useProjects } from '@/hooks/useProjects';
+import ProjectCard from '@/components/home/ProjectCard';
 
 const ProjectsPage = () => {
   const { data: projects, isLoading, error } = useProjects();
-
-  console.log("Projects data:", projects);
 
   return (
     <section className="py-20">
@@ -40,72 +36,11 @@ const ProjectsPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project, index) => (
-              <Card 
+              <ProjectCard 
                 key={project.id || index} 
-                className={`overflow-hidden hover:shadow-lg transition-shadow reveal ${index < 3 ? `stagger-${index + 1}` : ''}`}
-              >
-                <div className="aspect-video bg-muted">
-                  <img 
-                    src={project.featuredImage} 
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = '/placeholder.svg';
-                    }}
-                  />
-                </div>
-                <CardHeader className="p-6 pb-2">
-                  <div className="mb-2 flex flex-wrap gap-2">
-                    {project.technologies && project.technologies.map((tech, i) => (
-                      <span 
-                        key={i} 
-                        className="text-xs font-medium bg-secondary px-2 py-1 rounded"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                  <h3 className="text-xl font-bold">{project.title}</h3>
-                </CardHeader>
-                <CardContent className="p-6 pt-2">
-                  <p className="text-muted-foreground text-sm mb-4">
-                    {project.description}
-                  </p>
-                </CardContent>
-                <CardFooter className="p-6 pt-0 flex justify-between items-center">
-                  <Link 
-                    to={`/projects/${project.slug || project.id}`} 
-                    className="text-primary hover:underline text-sm font-medium"
-                  >
-                    View Details
-                  </Link>
-                  <div className="flex items-center gap-3">
-                    {project.githubUrl && (
-                      <a 
-                        href={project.githubUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-foreground"
-                        aria-label="GitHub"
-                      >
-                        <Github size={16} />
-                      </a>
-                    )}
-                    {project.liveUrl && (
-                      <a 
-                        href={project.liveUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-foreground"
-                        aria-label="Live Demo"
-                      >
-                        <ExternalLink size={16} />
-                      </a>
-                    )}
-                  </div>
-                </CardFooter>
-              </Card>
+                project={project}
+                index={index < 6 ? index + 1 : 0}
+              />
             ))}
           </div>
         )}

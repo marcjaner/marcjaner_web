@@ -3,8 +3,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import BlogPostCard from './BlogPostCard';
+import { useBlogPosts } from '@/hooks/useBlogPosts';
 
 const BlogSection = () => {
+  const { data: posts, isLoading } = useBlogPosts();
+  
+  const featuredPosts = posts?.filter(post => post.featured).slice(0, 2) || [];
+
   return (
     <section className="py-20 bg-secondary/30 dark:bg-secondary/10">
       <div className="container mx-auto px-6">
@@ -14,11 +19,21 @@ const BlogSection = () => {
           <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {[1, 2].map((item) => (
-            <BlogPostCard key={item} id={item} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="text-center">
+            <p className="text-muted-foreground">Loading blog posts...</p>
+          </div>
+        ) : featuredPosts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {featuredPosts.map((post, idx) => (
+              <BlogPostCard key={post.id} post={post} index={idx + 1} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center mb-8">
+            <p className="text-muted-foreground">No blog posts found.</p>
+          </div>
+        )}
         
         <div className="text-center mt-12 reveal">
           <Link 

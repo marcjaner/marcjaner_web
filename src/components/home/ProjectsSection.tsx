@@ -3,8 +3,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import ProjectCard from './ProjectCard';
+import { useProjects } from '@/hooks/useProjects';
 
 const ProjectsSection = () => {
+  const { data: projects, isLoading } = useProjects();
+  
+  const featuredProjects = projects?.filter(project => project.featured).slice(0, 3) || [];
+
   return (
     <section className="py-20">
       <div className="container mx-auto px-6">
@@ -14,11 +19,21 @@ const ProjectsSection = () => {
           <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[1, 2, 3].map((item) => (
-            <ProjectCard key={item} id={item} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="text-center">
+            <p className="text-muted-foreground">Loading projects...</p>
+          </div>
+        ) : featuredProjects.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredProjects.map((project, idx) => (
+              <ProjectCard key={project.id} project={project} index={idx + 1} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center mb-8">
+            <p className="text-muted-foreground">No projects found.</p>
+          </div>
+        )}
         
         <div className="text-center mt-12 reveal">
           <Link 

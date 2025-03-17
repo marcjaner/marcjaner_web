@@ -2,37 +2,41 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { Calendar, Clock } from 'lucide-react';
+import { BlogPost } from '@/types/collections';
 
 interface BlogPostCardProps {
-  id: number;
+  post: BlogPost;
   className?: string;
+  index?: number;
 }
 
-const BlogPostCard = ({ id, className }: BlogPostCardProps) => {
+const BlogPostCard = ({ post, className, index = 0 }: BlogPostCardProps) => {
   return (
     <div 
       className={cn(
         "bg-card border border-border rounded-xl overflow-hidden reveal transition-all duration-300 hover:shadow-md hover:-translate-y-0.5",
-        `stagger-${id}`,
+        index > 0 ? `stagger-${index}` : '',
         className
       )}
     >
       <div className="p-6">
         <div className="mb-4 flex justify-between items-center">
-          <span className="text-xs font-medium bg-secondary px-2 py-1 rounded">
-            Data Engineering
-          </span>
+          {post.tags && post.tags.length > 0 && (
+            <span className="text-xs font-medium bg-secondary px-2 py-1 rounded">
+              {post.tags[0]}
+            </span>
+          )}
           <span className="text-xs text-muted-foreground">
-            May {id + 10}, 2023
+            {post.date}
           </span>
         </div>
-        <h3 className="text-xl font-bold mb-2">Blog Post Title {id}</h3>
+        <h3 className="text-xl font-bold mb-2">{post.title}</h3>
         <p className="text-muted-foreground text-sm mb-4">
-          A short excerpt from the blog post that gives readers a preview 
-          of what they can expect from the full article.
+          {post.excerpt}
         </p>
         <Link 
-          to={`/blog/post-${id}`} 
+          to={`/blog/${post.slug}`} 
           className="text-primary hover:underline text-sm font-medium"
         >
           Read More
