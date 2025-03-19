@@ -12,7 +12,7 @@ const ContactPage = () => {
   const [status, setStatus] = useState({
     submitted: false,
     submitting: false,
-    info: { error: false, msg: null },
+    info: { error: false, msg: null as string | null },
   });
 
   const handleChange = (
