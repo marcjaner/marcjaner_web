@@ -115,7 +115,23 @@ const BlogDetail = () => {
             )}
           </header>
 
-          <div className="prose prose-lg dark:prose-invert max-w-none">
+          <div
+            className="prose prose-lg dark:prose-invert max-w-none 
+            [&_pre]:bg-secondary/50 [&_pre]:p-6 [&_pre]:rounded-lg [&_pre]:overflow-x-auto 
+            [&_code]:text-sm [&_code]:font-mono [&_code:not(pre_code)]:bg-secondary/50 [&_code:not(pre_code)]:px-1.5 [&_code:not(pre_code)]:py-0.5 [&_code:not(pre_code)]:rounded
+            [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4
+            [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4
+            [&_h3]:text-xl [&_h3]:font-bold [&_h3]:mt-6 [&_h3]:mb-3
+            [&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:mb-4
+            [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4
+            [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4
+            [&_li]:text-muted-foreground [&_li]:mb-2
+            [&_blockquote]:border-l-4 [&_blockquote]:border-primary/50 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground [&_blockquote]:my-4
+            [&_a]:text-primary [&_a]:hover:underline
+            [&_strong]:font-bold [&_strong]:text-foreground
+            [&_em]:italic
+            [&_hr]:my-8 [&_hr]:border-border"
+          >
             <ReactMarkdown>{post.content}</ReactMarkdown>
           </div>
         </article>

@@ -42,14 +42,14 @@ const ProjectDetail = () => {
     <div className="container mx-auto px-6 py-12 md:py-20">
       <Link
         to="/projects"
-        className="inline-flex items-center text-sm text-primary hover:underline mb-8 reveal"
+        className="inline-flex items-center text-sm text-primary hover:underline mb-8"
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Projects
       </Link>
 
       <div className="max-w-4xl mx-auto">
-        <div className="bg-card rounded-xl overflow-hidden shadow-md mb-10 reveal">
+        <div className="bg-card rounded-xl overflow-hidden shadow-md mb-10">
           <img
             src={project.featuredImage}
             alt={project.title}
@@ -61,14 +61,14 @@ const ProjectDetail = () => {
           />
         </div>
 
-        <div className="mb-6 reveal stagger-1">
+        <div className="mb-6">
           <h1 className="text-3xl md:text-4xl font-bold mb-4">
             {project.title}
           </h1>
           <p className="text-muted-foreground">{project.description}</p>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-8 reveal stagger-2">
+        <div className="flex flex-wrap gap-2 mb-8">
           {project.technologies &&
             project.technologies.map((tech, index) => (
               <span
@@ -80,7 +80,7 @@ const ProjectDetail = () => {
             ))}
         </div>
 
-        <div className="flex flex-wrap gap-4 mb-10 reveal stagger-3">
+        <div className="flex flex-wrap gap-4 mb-10">
           {project.githubUrl && (
             <a
               href={project.githubUrl}
@@ -103,7 +103,23 @@ const ProjectDetail = () => {
           )}
         </div>
 
-        <div className="prose dark:prose-invert max-w-none mb-16 reveal stagger-4">
+        <div
+          className="prose dark:prose-invert max-w-none mb-16 
+          [&_pre]:bg-secondary/50 [&_pre]:p-6 [&_pre]:rounded-lg [&_pre]:overflow-x-auto 
+          [&_code]:text-sm [&_code]:font-mono [&_code:not(pre_code)]:bg-secondary/50 [&_code:not(pre_code)]:px-1.5 [&_code:not(pre_code)]:py-0.5 [&_code:not(pre_code)]:rounded
+          [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:mt-8 [&_h1]:mb-4
+          [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4
+          [&_h3]:text-xl [&_h3]:font-bold [&_h3]:mt-6 [&_h3]:mb-3
+          [&_p]:text-muted-foreground [&_p]:leading-relaxed [&_p]:mb-4
+          [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:mb-4
+          [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:mb-4
+          [&_li]:text-muted-foreground [&_li]:mb-2
+          [&_blockquote]:border-l-4 [&_blockquote]:border-primary/50 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground [&_blockquote]:my-4
+          [&_a]:text-primary [&_a]:hover:underline
+          [&_strong]:font-bold [&_strong]:text-foreground
+          [&_em]:italic
+          [&_hr]:my-8 [&_hr]:border-border"
+        >
           <ReactMarkdown>{project.content}</ReactMarkdown>
         </div>
       </div>

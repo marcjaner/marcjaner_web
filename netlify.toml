@@ -7,7 +7,7 @@
 
 [dev]
   framework = "vite"
-  targetPort = 8082
+  targetPort = 8080
   port = 8888
   functionsPort = 9999
   publish = "public"
