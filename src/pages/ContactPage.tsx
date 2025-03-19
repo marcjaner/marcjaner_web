@@ -1,70 +1,80 @@
-
-import React, { useState } from 'react';
-import { Mail, Send } from 'lucide-react';
+import React, { useState } from "react";
+import { Mail, Send } from "lucide-react";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
-  
+
   const [status, setStatus] = useState({
     submitted: false,
     submitting: false,
-    info: { error: false, msg: null }
+    info: { error: false, msg: null },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus(prevStatus => ({ ...prevStatus, submitting: true }));
-    
+    setStatus((prevStatus) => ({ ...prevStatus, submitting: true }));
+
     try {
-      const res = await fetch('/.netlify/functions/contact', {
-        method: 'POST',
+      const res = await fetch("/.netlify/functions/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...formData,
-          formType: 'contact'
-        })
+          formType: "contact",
+        }),
       });
-      
+
       const data = await res.json();
-      
+
       if (res.status === 200) {
         setStatus({
           submitted: true,
           submitting: false,
-          info: { error: false, msg: data.message || 'Message sent successfully!' }
+          info: {
+            error: false,
+            msg: data.message || "Message sent successfully!",
+          },
         });
         setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: ''
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
         });
       } else {
         setStatus({
           submitted: false,
           submitting: false,
-          info: { error: true, msg: data.error || 'Something went wrong. Please try again later.' }
+          info: {
+            error: true,
+            msg: data.error || "Something went wrong. Please try again later.",
+          },
         });
       }
     } catch (error) {
       setStatus({
         submitted: false,
         submitting: false,
-        info: { error: true, msg: 'Something went wrong. Please try again later.' }
+        info: {
+          error: true,
+          msg: "Something went wrong. Please try again later.",
+        },
       });
     }
   };
@@ -81,7 +91,7 @@ const ContactPage = () => {
               </p>
               <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="md:col-span-1 reveal">
                 <div className="bg-card border border-border rounded-xl p-6">
@@ -93,20 +103,20 @@ const ContactPage = () => {
                     <p className="text-muted-foreground mb-2">
                       Feel free to email me directly
                     </p>
-                    <a 
-                      href="mailto:marcjanerferrer@gmail.com" 
+                    <a
+                      href="mailto:marcjanerferrer@gmail.com"
                       className="text-primary hover:underline"
                     >
                       marcjanerferrer@gmail.com
                     </a>
                   </div>
-                  
+
                   <div>
                     <h3 className="text-xl font-bold mb-4">Connect</h3>
                     <div className="flex space-x-4">
-                      <a 
-                        href="https://github.com" 
-                        target="_blank" 
+                      <a
+                        href="https://github.com/marcjaner"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="w-10 h-10 border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary transition-colors"
                         aria-label="GitHub"
@@ -126,9 +136,9 @@ const ContactPage = () => {
                           <path d="M9 18c-4.51 2-5-2-7-2"></path>
                         </svg>
                       </a>
-                      <a 
-                        href="https://linkedin.com" 
-                        target="_blank" 
+                      <a
+                        href="https://www.linkedin.com/in/marc-janer"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="w-10 h-10 border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary transition-colors"
                         aria-label="LinkedIn"
@@ -149,9 +159,9 @@ const ContactPage = () => {
                           <circle cx="4" cy="4" r="2"></circle>
                         </svg>
                       </a>
-                      <a 
-                        href="https://twitter.com" 
-                        target="_blank" 
+                      <a
+                        href="https://x.com/marcjaner"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="w-10 h-10 border border-border rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary transition-colors"
                         aria-label="Twitter"
@@ -174,17 +184,20 @@ const ContactPage = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="md:col-span-2 reveal stagger-1">
                 <div className="bg-card border border-border rounded-xl p-6">
                   <form onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                       <div>
-                        <label htmlFor="name" className="block text-sm font-medium mb-2">
+                        <label
+                          htmlFor="name"
+                          className="block text-sm font-medium mb-2"
+                        >
                           Name
                         </label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           id="name"
                           name="name"
                           value={formData.name}
@@ -194,11 +207,14 @@ const ContactPage = () => {
                         />
                       </div>
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium mb-2">
+                        <label
+                          htmlFor="email"
+                          className="block text-sm font-medium mb-2"
+                        >
                           Email
                         </label>
-                        <input 
-                          type="email" 
+                        <input
+                          type="email"
                           id="email"
                           name="email"
                           value={formData.email}
@@ -208,13 +224,16 @@ const ContactPage = () => {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="mb-6">
-                      <label htmlFor="subject" className="block text-sm font-medium mb-2">
+                      <label
+                        htmlFor="subject"
+                        className="block text-sm font-medium mb-2"
+                      >
                         Subject
                       </label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         id="subject"
                         name="subject"
                         value={formData.subject}
@@ -223,12 +242,15 @@ const ContactPage = () => {
                         required
                       />
                     </div>
-                    
+
                     <div className="mb-6">
-                      <label htmlFor="message" className="block text-sm font-medium mb-2">
+                      <label
+                        htmlFor="message"
+                        className="block text-sm font-medium mb-2"
+                      >
                         Message
                       </label>
-                      <textarea 
+                      <textarea
                         id="message"
                         name="message"
                         value={formData.message}
@@ -238,21 +260,29 @@ const ContactPage = () => {
                         required
                       ></textarea>
                     </div>
-                    
-                    <button 
+
+                    <button
                       type="submit"
                       disabled={status.submitting}
                       className="bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors inline-flex items-center gap-2 disabled:opacity-70"
                     >
                       {status.submitting ? (
-                        'Sending...'
+                        "Sending..."
                       ) : (
-                        <>Send Message <Send size={16} /></>
+                        <>
+                          Send Message <Send size={16} />
+                        </>
                       )}
                     </button>
-                    
+
                     {status.info.msg && (
-                      <div className={`mt-4 p-3 rounded-md ${status.info.error ? 'bg-destructive/10 text-destructive' : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'}`}>
+                      <div
+                        className={`mt-4 p-3 rounded-md ${
+                          status.info.error
+                            ? "bg-destructive/10 text-destructive"
+                            : "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
+                        }`}
+                      >
                         {status.info.msg}
                       </div>
                     )}
