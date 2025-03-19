@@ -53,19 +53,6 @@ const BlogPostCard = ({ post, className, index = 0 }: BlogPostCardProps) => {
         className
       )}
     >
-      <Link to={`/blog/${post.slug}`} className="block">
-        <div className="aspect-[4/3] w-full">
-          <img
-            src={getImageUrl(post.featuredImage)}
-            alt={post.title}
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = "/placeholder.svg";
-            }}
-          />
-        </div>
-      </Link>
       <div className="p-6">
         <div className="mb-4 flex justify-between items-center">
           {post.tags && post.tags.length > 0 && (

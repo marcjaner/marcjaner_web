@@ -6,7 +6,7 @@ description: "An interactive dashboard for visualizing complex datasets with cus
 featuredImage: "/images/projects/data-viz-dashboard.jpeg"
 technologies: ["React", "D3.js", "TypeScript"]
 githubUrl: "https://github.com/username/data-viz-dashboard"
-liveUrl: "https://data-viz-dashboard.example.com"
+liveUrl: "https://finanzia.app"
 featured: true
 date: "2023-05-15"
 ---

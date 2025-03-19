@@ -46,7 +46,7 @@ const ProjectsSection = () => {
 
   return (
     <section className="py-20">
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-6 md:px-12">
         <div
           className={`max-w-4xl mx-auto mb-12 text-center transition-all duration-700 ${
             isHeaderVisible
