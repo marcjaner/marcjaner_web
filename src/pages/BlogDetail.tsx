@@ -63,12 +63,13 @@ const BlogDetail = () => {
             <div className="flex flex-wrap gap-2 mb-4">
               {post.tags &&
                 post.tags.map((tag: string, i: number) => (
-                  <span
+                  <Link
                     key={i}
-                    className="inline-flex items-center gap-1 text-xs font-medium bg-secondary px-2 py-1 rounded"
+                    to={`/blog/tags/${tag.toLowerCase()}`}
+                    className="inline-flex items-center gap-1 text-xs font-medium bg-secondary px-2 py-1 rounded hover:bg-secondary/80 hover:text-primary transition-colors"
                   >
                     <Tag size={12} /> {tag}
-                  </span>
+                  </Link>
                 ))}
             </div>
             <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
@@ -79,7 +80,7 @@ const BlogDetail = () => {
               {post.author && (
                 <div className="flex items-center gap-2">
                   <img
-                    src="/placeholder-avatar.svg"
+                    src="/images/home/marc_janer.jpg"
                     alt={post.author}
                     className="w-6 h-6 rounded-full"
                   />

@@ -82,15 +82,15 @@ const BlogPage = () => {
       </div>
       <div className="md:w-2/3">
         <div className="flex flex-wrap gap-2 mb-3">
-          {post.tags &&
-            post.tags.map((tag: string, i: number) => (
-              <span
-                key={i}
-                className="inline-flex items-center gap-1 text-xs font-medium bg-secondary px-2 py-1 rounded"
-              >
-                <Tag size={12} /> {tag}
-              </span>
-            ))}
+          {post.tags?.map((tag: string, i: number) => (
+            <Link
+              key={i}
+              to={`/blog/tags/${tag.toLowerCase()}`}
+              className="inline-flex items-center gap-1 text-xs font-medium bg-secondary px-2 py-1 rounded hover:bg-secondary/80 hover:text-primary transition-colors"
+            >
+              <Tag size={12} /> {tag}
+            </Link>
+          ))}
         </div>
         <h2 className="text-2xl font-bold mb-3">
           <Link

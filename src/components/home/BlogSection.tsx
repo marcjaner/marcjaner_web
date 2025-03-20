@@ -56,7 +56,7 @@ const BlogSection = () => {
         >
           <h2 className="text-3xl font-bold mb-4">Latest Blog Posts</h2>
           <p className="text-muted-foreground">
-            Thoughts, tutorials, and insights
+            Thoughts, stories and insights
           </p>
           <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
         </div>

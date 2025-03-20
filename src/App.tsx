@@ -12,6 +12,7 @@ import BlogDetail from "./pages/BlogDetail";
 import ContactPage from "./pages/ContactPage";
 import NewsletterPage from "./pages/NewsletterPage";
 import NotFound from "./pages/NotFound";
+import TagsPage from "./pages/TagsPage";
 
 // Create a client with better defaults for our use case
 const queryClient = new QueryClient({
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/blog/:slug" element={<BlogDetail />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/newsletter" element={<NewsletterPage />} />
+            <Route path="/blog/tags/:tag" element={<TagsPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

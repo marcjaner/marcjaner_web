@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { Calendar, Clock } from "lucide-react";
+import { Calendar, Clock, Tag } from "lucide-react";
 
 interface BlogPost {
   id: string;
@@ -56,9 +56,14 @@ const BlogPostCard = ({ post, className, index = 0 }: BlogPostCardProps) => {
       <div className="p-6">
         <div className="mb-4 flex justify-between items-center">
           {post.tags && post.tags.length > 0 && (
-            <span className="text-xs font-medium bg-secondary px-2 py-1 rounded">
-              {post.tags[0]}
-            </span>
+            <Link
+              to={`/blog/tags/${post.tags[0].toLowerCase()}`}
+              className="text-xs font-medium bg-secondary px-2 py-1 rounded hover:text-primary transition-colors"
+            >
+              <span className="inline-flex items-center gap-1">
+                <Tag size={12} /> {post.tags[0]}
+              </span>
+            </Link>
           )}
           <span className="text-xs text-muted-foreground">{post.date}</span>
         </div>

@@ -3,9 +3,9 @@ title: "Setting Up Efficient ETL Pipelines with Apache Airflow"
 date: "2023-05-15"
 description: "Learn how to design and implement efficient ETL pipelines using Apache Airflow for data orchestration."
 featuredImage: "/images/blog/airflow-etl.jpeg"
-author: "John Doe"
+author: "Marc Janer"
 readTime: "8 min read"
-tags: ["ETL", "Airflow", "Data Engineering"]
+tags: ["ETL", "Airflow"]
 ---
 
 # Setting Up Efficient ETL Pipelines with Apache Airflow
