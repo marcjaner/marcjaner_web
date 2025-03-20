@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Mail, Send } from "lucide-react";
+import { useContactForm } from "../hooks/useContactForm";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -9,11 +10,7 @@ const ContactPage = () => {
     message: "",
   });
 
-  const [status, setStatus] = useState({
-    submitted: false,
-    submitting: false,
-    info: { error: false, msg: null as string | null },
-  });
+  const contactMutation = useContactForm();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -26,56 +23,21 @@ const ContactPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setStatus((prevStatus) => ({ ...prevStatus, submitting: true }));
 
     try {
-      const res = await fetch("/.netlify/functions/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          formType: "contact",
-        }),
+      await contactMutation.mutateAsync({
+        ...formData,
+        formType: "contact",
       });
 
-      const data = await res.json();
-
-      if (res.status === 200) {
-        setStatus({
-          submitted: true,
-          submitting: false,
-          info: {
-            error: false,
-            msg: data.message || "Message sent successfully!",
-          },
-        });
-        setFormData({
-          name: "",
-          email: "",
-          subject: "",
-          message: "",
-        });
-      } else {
-        setStatus({
-          submitted: false,
-          submitting: false,
-          info: {
-            error: true,
-            msg: data.error || "Something went wrong. Please try again later.",
-          },
-        });
-      }
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
     } catch (error) {
-      setStatus({
-        submitted: false,
-        submitting: false,
-        info: {
-          error: true,
-          msg: "Something went wrong. Please try again later.",
-        },
-      });
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -263,10 +225,10 @@ const ContactPage = () => {
 
                     <button
                       type="submit"
-                      disabled={status.submitting}
+                      disabled={contactMutation.isPending}
                       className="bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors inline-flex items-center gap-2 disabled:opacity-70"
                     >
-                      {status.submitting ? (
+                      {contactMutation.isPending ? (
                         "Sending..."
                       ) : (
                         <>
@@ -275,15 +237,17 @@ const ContactPage = () => {
                       )}
                     </button>
 
-                    {status.info.msg && (
-                      <div
-                        className={`mt-4 p-3 rounded-md ${
-                          status.info.error
-                            ? "bg-destructive/10 text-destructive"
-                            : "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400"
-                        }`}
-                      >
-                        {status.info.msg}
+                    {contactMutation.isError && (
+                      <div className="mt-4 p-3 rounded-md bg-destructive/10 text-destructive">
+                        {contactMutation.error instanceof Error
+                          ? contactMutation.error.message
+                          : "Something went wrong. Please try again later."}
+                      </div>
+                    )}
+
+                    {contactMutation.isSuccess && (
+                      <div className="mt-4 p-3 rounded-md bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+                        Message sent successfully!
                       </div>
                     )}
                   </form>
