@@ -9,7 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "netlify:dev": "netlify dev",
+    "netlify:dev": "npm run generate:manifests && netlify dev",
     "prebuild": "node scripts/generate-blog-manifest.js && node scripts/generate-project-manifest.js",
     "generate:manifests": "node scripts/generate-blog-manifest.js && node scripts/generate-project-manifest.js"
   },

@@ -75,7 +75,7 @@ const BlogPostCard = ({ post, className, index = 0 }: BlogPostCardProps) => {
           to={`/blog/${post.slug}`}
           className="text-primary hover:underline text-sm font-medium"
         >
-          Read More
+          Read full post
         </Link>
       </div>
     </div>

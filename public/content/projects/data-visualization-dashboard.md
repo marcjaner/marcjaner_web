@@ -4,7 +4,7 @@ slug: "data-visualization-dashboard"
 title: "Data Visualization Dashboard"
 description: "An interactive dashboard for visualizing complex datasets with customizable charts and filters."
 featuredImage: "/images/projects/data-viz-dashboard.jpeg"
-technologies: ["React", "D3.js", "TypeScript"]
+technologies: ["React", "Supabase", "Typescript"]
 githubUrl: "https://github.com/username/data-viz-dashboard"
 liveUrl: "https://finanzia.app"
 featured: true
