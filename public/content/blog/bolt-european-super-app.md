@@ -5,7 +5,7 @@ description: "La historia de cómo Markus Villig fundó Bolt con 19 años, los r
 featuredImage: "/images/blog/bolt-european-super-app/bolt.png"
 author: "Marc Janer"
 readTime: "6 min read"
-tags: ["Bolt", "Startups", "Marketplace", "Emprendimiento"]
+tags: ["Startups", "Emprendimiento"]
 ---
 
 Bolt ([bolt.eu](https://bolt.eu)) está valorada en **14.000 millones de euros**. Fue fundada en 2013 por [@villigm](https://twitter.com/villigm) y hoy en día es una de las startups europeas más importantes de la última década.
