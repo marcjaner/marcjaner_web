@@ -1,13 +1,12 @@
 ---
-id: "2"
-slug: "etl-pipeline-framework"
-title: "ETL Pipeline Framework"
-description: "A scalable framework for building and managing ETL workflows with monitoring and error handling."
-featuredImage: "/images/projects/etl-framework.jpeg"
-technologies: ["Python", "Apache Airflow", "Docker"]
-githubUrl: "https://github.com/username/etl-framework"
+slug: "finanzia-app"
+title: "FINANZIA: A sexy personal finance app"
+description: "A desktop and mobile app for young adults that want to become more responsible with their finances."
+featuredImage: "/images/projects/finanzia-app/finanzia_mockup.png"
+technologies: ["React", "React Native", "NodeJS"]
+liveUrl: "https://finanzia.app"
 featured: true
-date: "2023-08-22"
+date: "Mar 2024 - Present"
 ---
 
 # ETL Pipeline Framework

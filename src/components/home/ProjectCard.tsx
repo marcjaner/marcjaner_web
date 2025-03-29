@@ -49,7 +49,7 @@ const ProjectCard = ({ project, className, index = 0 }: ProjectCardProps) => {
   return (
     <div
       className={cn(
-        "bg-card border border-border rounded-xl overflow-hidden transition-all duration-500 hover:shadow-md hover:-translate-y-0.5",
+        "bg-card border border-border rounded-xl overflow-hidden transition-all duration-500 hover:shadow-md hover:-translate-y-0.5 hover:scale-[0.98]",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
         className
       )}
@@ -66,12 +66,15 @@ const ProjectCard = ({ project, className, index = 0 }: ProjectCardProps) => {
         />
       </div>
       <div className="p-6">
-        <div className="mb-4">
-          {project.technologies && project.technologies.length > 0 && (
-            <span className="text-xs font-medium bg-secondary px-2 py-1 rounded">
-              {project.technologies[0]}
+        <div className="mb-4 flex gap-2">
+          {project.technologies?.slice(0, 3).map((tech, i) => (
+            <span
+              key={i}
+              className="text-xs dark:text-muted-foreground text-stone-600 font-medium bg-secondary px-2 py-1 rounded"
+            >
+              {tech}
             </span>
-          )}
+          ))}
         </div>
         <h3 className="text-xl font-bold mb-2">{project.title}</h3>
         <p className="text-muted-foreground text-sm mb-4">

@@ -68,16 +68,28 @@ const ProjectDetail = () => {
           <p className="text-muted-foreground">{project.description}</p>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-8">
-          {project.technologies &&
-            project.technologies.map((tech, index) => (
-              <span
-                key={index}
-                className="bg-secondary text-secondary-foreground text-xs font-medium px-3 py-1 rounded-full"
-              >
-                {tech}
-              </span>
-            ))}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+          <div className="flex flex-wrap gap-2">
+            {project.technologies &&
+              project.technologies.map((tech, index) => (
+                <span
+                  key={index}
+                  className="bg-secondary text-secondary-foreground text-xs font-medium px-3 py-1 rounded-full"
+                >
+                  {tech}
+                </span>
+              ))}
+          </div>
+          {project.liveUrl && (
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
+            >
+              <ExternalLink size={16} /> Live Demo
+            </a>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-4 mb-10">
@@ -89,16 +101,6 @@ const ProjectDetail = () => {
               className="inline-flex items-center gap-2 text-sm bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-md transition-colors"
             >
               <Github size={16} /> View on GitHub
-            </a>
-          )}
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
-            >
-              <ExternalLink size={16} /> Live Demo
             </a>
           )}
         </div>
