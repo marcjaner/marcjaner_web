@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ProjectCard from "@/components/home/ProjectCard";
 import { useProjects } from "@/hooks/useProjects";
+import MetaTags from "@/components/MetaTags";
 
 const getImageUrl = (path: string) => {
   // If the path is already a full URL, return it as is
@@ -49,38 +50,54 @@ const ProjectsPage = () => {
 
   if (isLoading) {
     return (
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          {headerSection}
-          <div className="text-center">
-            <p className="text-muted-foreground">Loading projects...</p>
+      <>
+        <MetaTags
+          title="Projects | Marc Janer"
+          description="A collection of my work, side projects, and experiments in data engineering, software development, and more."
+          image="/images/home/marc_janer.jpg"
+        />
+        <section className="py-20">
+          <div className="container mx-auto px-6">
+            {headerSection}
+            <div className="text-center">
+              <p className="text-muted-foreground">Loading projects...</p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </>
     );
   }
 
   if (error) {
     return (
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          {headerSection}
-          <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4">Error Loading Projects</h2>
-            <p className="text-muted-foreground mb-4">
-              {error instanceof Error
-                ? error.message
-                : "Failed to fetch projects"}
-            </p>
-            <button
-              onClick={() => refetch()}
-              className="text-primary hover:underline"
-            >
-              Try Again
-            </button>
+      <>
+        <MetaTags
+          title="Projects | Marc Janer"
+          description="A collection of my work, side projects, and experiments in data engineering, software development, and more."
+          image="/images/home/marc_janer.jpg"
+        />
+        <section className="py-20">
+          <div className="container mx-auto px-6">
+            {headerSection}
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-4">
+                Error Loading Projects
+              </h2>
+              <p className="text-muted-foreground mb-4">
+                {error instanceof Error
+                  ? error.message
+                  : "Failed to fetch projects"}
+              </p>
+              <button
+                onClick={() => refetch()}
+                className="text-primary hover:underline"
+              >
+                Try Again
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </>
     );
   }
 
@@ -88,33 +105,40 @@ const ProjectsPage = () => {
   const validProjects = projects && projects.length > 0 ? [...projects] : [];
 
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-6">
-        {headerSection}
+    <>
+      <MetaTags
+        title="Projects | Marc Janer"
+        description="A collection of my work, side projects, and experiments in data engineering, software development, and more."
+        image="/images/home/marc_janer.jpg"
+      />
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          {headerSection}
 
-        {validProjects.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No projects found.</p>
-            <button
-              onClick={() => refetch()}
-              className="text-primary hover:underline mt-4"
-            >
-              Refresh
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {validProjects.map((project, index) => (
-              <ProjectCard
-                key={project.id || index}
-                project={project}
-                index={index}
-              />
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
+          {validProjects.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No projects found.</p>
+              <button
+                onClick={() => refetch()}
+                className="text-primary hover:underline mt-4"
+              >
+                Refresh
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {validProjects.map((project, index) => (
+                <ProjectCard
+                  key={project.id || index}
+                  project={project}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    </>
   );
 };
 

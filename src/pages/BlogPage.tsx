@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Calendar, Clock, Tag } from "lucide-react";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
 import type { MarkdownMeta } from "@/lib/markdown";
+import MetaTags from "@/components/MetaTags";
 
 const getImageUrl = (path: string) => {
   // If the path is already a full URL, return it as is
@@ -140,36 +141,52 @@ const BlogPage = () => {
 
   if (loading) {
     return (
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          {headerSection}
-          <div className="text-center">
-            <p className="text-muted-foreground">Loading posts...</p>
+      <>
+        <MetaTags
+          title="Blog | Marc Janer"
+          description="Thoughts, tutorials, and insights on data engineering, software development, and technology."
+          image="/images/home/marc_janer.jpg"
+        />
+        <section className="py-20">
+          <div className="container mx-auto px-6">
+            {headerSection}
+            <div className="text-center">
+              <p className="text-muted-foreground">Loading posts...</p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </>
     );
   }
 
   if (error) {
     return (
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          {headerSection}
-          <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4">Error Loading Posts</h2>
-            <p className="text-muted-foreground mb-4">
-              {error instanceof Error ? error.message : "Failed to fetch posts"}
-            </p>
-            <button
-              onClick={() => refetch()}
-              className="text-primary hover:underline"
-            >
-              Try Again
-            </button>
+      <>
+        <MetaTags
+          title="Blog | Marc Janer"
+          description="Thoughts, tutorials, and insights on data engineering, software development, and technology."
+          image="/images/home/marc_janer.jpg"
+        />
+        <section className="py-20">
+          <div className="container mx-auto px-6">
+            {headerSection}
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-4">Error Loading Posts</h2>
+              <p className="text-muted-foreground mb-4">
+                {error instanceof Error
+                  ? error.message
+                  : "Failed to fetch posts"}
+              </p>
+              <button
+                onClick={() => refetch()}
+                className="text-primary hover:underline"
+              >
+                Try Again
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </>
     );
   }
 
@@ -177,31 +194,38 @@ const BlogPage = () => {
   const validPosts = posts && posts.length > 0 ? [...posts] : [];
 
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-6">
-        {headerSection}
+    <>
+      <MetaTags
+        title="Blog | Marc Janer"
+        description="Thoughts, tutorials, and insights on data engineering, software development, and technology."
+        image="/images/home/marc_janer.jpg"
+      />
+      <section className="py-20">
+        <div className="container mx-auto px-6">
+          {headerSection}
 
-        {validPosts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No blog posts found.</p>
-            <button
-              onClick={() => refetch()}
-              className="text-primary hover:underline mt-4"
-            >
-              Refresh
-            </button>
-          </div>
-        ) : (
-          <div className="max-w-4xl mx-auto">
-            <div className="space-y-12">
-              {validPosts.map((post, index) =>
-                renderBlogPostDetail(post, index)
-              )}
+          {validPosts.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No blog posts found.</p>
+              <button
+                onClick={() => refetch()}
+                className="text-primary hover:underline mt-4"
+              >
+                Refresh
+              </button>
             </div>
-          </div>
-        )}
-      </div>
-    </section>
+          ) : (
+            <div className="max-w-4xl mx-auto">
+              <div className="space-y-12">
+                {validPosts.map((post, index) =>
+                  renderBlogPostDetail(post, index)
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+    </>
   );
 };
 

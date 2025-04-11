@@ -5,7 +5,7 @@ description: "Qué he aprendido, qué ha cambiado y qué habría hecho diferente
 featuredImage: "/images/blog/rever-un-ano-despues/launch_fast_fail_faster.jpeg"
 author: "Marc Janer"
 readTime: "6 min read"
-tags: ["REVER", "Startup", "Reflexión"]
+tags: ["REVER", "Startups", "Reflexión"]
 ---
 
 # REVER, 1 año después
