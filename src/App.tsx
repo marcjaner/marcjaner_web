@@ -13,6 +13,7 @@ import ContactPage from "./pages/ContactPage";
 import NewsletterPage from "./pages/NewsletterPage";
 import NotFound from "./pages/NotFound";
 import TagsPage from "./pages/TagsPage";
+import PosthogPolicyPage from "./pages/PosthogPolicyPage";
 import { HelmetProvider } from "react-helmet-async";
 
 // Create a client with better defaults for our use case
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/newsletter" element={<NewsletterPage />} />
               <Route path="/blog/tags/:tag" element={<TagsPage />} />
+              <Route path="/posthog/policy" element={<PosthogPolicyPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
