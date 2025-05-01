@@ -102,29 +102,28 @@ const ProjectDetail = () => {
                   </span>
                 ))}
             </div>
-            {project.liveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
-              >
-                <ExternalLink size={16} /> Live Demo
-              </a>
-            )}
-          </div>
-
-          <div className="flex flex-wrap gap-4 mb-10">
-            {project.githubUrl && (
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-md transition-colors"
-              >
-                <Github size={16} /> View on GitHub
-              </a>
-            )}
+            <div className="flex flex-wrap gap-4">
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm bg-secondary hover:bg-secondary/80 px-4 py-2 rounded-md transition-colors"
+                >
+                  <Github size={16} /> View on GitHub
+                </a>
+              )}
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
+                >
+                  <ExternalLink size={16} /> Live Demo
+                </a>
+              )}
+            </div>
           </div>
 
           <div
