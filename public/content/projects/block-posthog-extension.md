@@ -4,7 +4,8 @@ title: "PostHog Blocker: A Chrome extension to block yourself from PostHog"
 description: "A lightweight Chrome extension that empowers users to block PostHog analytics and recordings on domains of their choice for enhanced privacy."
 featuredImage: "/images/projects/block-posthog-extension/featured.png"
 technologies: ["Chrome Extension", "JavaScript"]
-liveUrl: "https://github.com/marcjaner/posthog-blocker?tab=readme-ov-file"
+liveUrl: "https://github.com/marcjaner/posthog-blocker"
+githubUrl: "https://github.com/marcjaner/posthog-blocker"
 featured: true
 date: "May 2025 - Present"
 ---
