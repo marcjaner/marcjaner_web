@@ -4,7 +4,7 @@ title: "PostHog Blocker: A Chrome extension to block yourself from PostHog"
 description: "A lightweight Chrome extension that empowers users to block PostHog analytics and recordings on domains of their choice for enhanced privacy."
 featuredImage: "/images/projects/block-posthog-extension/featured.png"
 technologies: ["Chrome Extension", "JavaScript"]
-liveUrl: "https://github.com/marcjaner/posthog-blocker"
+liveUrl: "https://chromewebstore.google.com/detail/posthog-self-blocker/hicioojgkpaeojpclncaojemmkliiblk"
 githubUrl: "https://github.com/marcjaner/posthog-blocker"
 featured: true
 date: "May 2025 - Present"
@@ -78,9 +78,9 @@ This project is built with plain JavaScript using Chrome Extension Manifest V3:
 
 ## Installation & Usage
 
-1. Install from the Chrome Web Store (awaiting validation)
+1. Install from the Chrome Web Store [here](https://chromewebstore.google.com/detail/posthog-self-blocker/hicioojgkpaeojpclncaojemmkliiblk)
 2. Or load unpacked:
    - Clone the repository
    - Go to `chrome://extensions/` and enable Developer mode
-   - Click “Load unpacked” and select the extension folder
+   - Click "Load unpacked" and select the extension folder
 3. Click the extension icon, add domains to block, and enjoy privacy without rebuilding or reloading pages.
