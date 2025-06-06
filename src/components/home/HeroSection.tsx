@@ -22,7 +22,7 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center reveal stagger-3">
             <Link
               to="/projects"
-              className="bg-primary text-transparent bg-clip-text px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors"
+              className="bg-primary text-background px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors"
             >
               View My Projects
             </Link>
