@@ -1,6 +1,5 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -13,21 +12,22 @@ const HeroSection = () => {
             </span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 reveal stagger-1">
-            Building bridges between <span className="text-primary">data</span> and <span className="text-primary">code</span>
+            Building bridges between <span className="text-primary">data</span>{" "}
+            and <span className="text-primary">code</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 reveal stagger-2">
-            I'm Marc, a data engineer student and software developer passionate about creating 
-            meaningful projects that solve real problems.
+            I'm Marc, a data engineer student and software developer passionate
+            about creating meaningful projects that solve real problems.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center reveal stagger-3">
-            <Link 
-              to="/projects" 
-              className="bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors"
+            <Link
+              to="/projects"
+              className="bg-primary text-transparent bg-clip-text px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors"
             >
               View My Projects
             </Link>
-            <Link 
-              to="/contact" 
+            <Link
+              to="/contact"
               className="bg-secondary text-secondary-foreground px-6 py-3 rounded-md font-medium hover:bg-secondary/80 transition-colors"
             >
               Get In Touch
