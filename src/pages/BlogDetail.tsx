@@ -148,7 +148,6 @@ const BlogDetail = () => {
               <ReactMarkdown>{post.content}</ReactMarkdown>
             </div>
           </article>
-
           <NewsletterSection />
         </div>
       </section>

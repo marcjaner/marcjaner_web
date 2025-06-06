@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNewsletter } from "@/hooks/useNewsletter";
 import { toast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 const NewsletterSection = () => {
   const [email, setEmail] = useState("");
   const newsletterMutation = useNewsletter();
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,7 +41,12 @@ const NewsletterSection = () => {
   return (
     <section className="py-20">
       <div className="container mx-auto px-6">
-        <div className="max-w-3xl mx-auto bg-card border border-border rounded-2xl p-8 md:p-12 reveal">
+        <div
+          className={cn(
+            "max-w-3xl mx-auto bg-card border border-border rounded-2xl p-8 md:p-12 reveal",
+            isVisible ? "active" : ""
+          )}
+        >
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
             <p className="text-muted-foreground">
