@@ -14,6 +14,7 @@ import NewsletterPage from "./pages/NewsletterPage";
 import NotFound from "./pages/NotFound";
 import TagsPage from "./pages/TagsPage";
 import PosthogPolicyPage from "./pages/PosthogPolicyPage";
+import FoodiesAppPage from "./pages/FoodiesAppPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
 
@@ -64,6 +65,7 @@ const App = () => {
                 <Route path="/newsletter" element={<NewsletterPage />} />
                 <Route path="/blog/tags/:tag" element={<TagsPage />} />
                 <Route path="/posthog/policy" element={<PosthogPolicyPage />} />
+                <Route path="/foodies" element={<FoodiesAppPage />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
