@@ -15,6 +15,11 @@
   autoLaunch = false
 
 [[redirects]]
+  from = "/support"
+  to = "https://buymeacoffee.com/marcjaner"
+  status = 301
+
+[[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
@@ -23,8 +28,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
-[[redirects]]
-  from = "/support"
-  to = "https://buymeacoffee.com/marcjaner"
-  status = 301
