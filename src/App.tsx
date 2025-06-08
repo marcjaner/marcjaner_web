@@ -17,6 +17,7 @@ import PosthogPolicyPage from "./pages/PosthogPolicyPage";
 import FoodiesAppPage from "./pages/FoodiesAppPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
+import { FoodiesPrivacyPage } from "./pages/FoodiesPrivacyPage";
 
 // Create a client with better defaults for our use case
 const queryClient = new QueryClient({
@@ -66,6 +67,10 @@ const App = () => {
                 <Route path="/blog/tags/:tag" element={<TagsPage />} />
                 <Route path="/posthog/policy" element={<PosthogPolicyPage />} />
                 <Route path="/foodies" element={<FoodiesAppPage />} />
+                <Route
+                  path="/foodies/privacy"
+                  element={<FoodiesPrivacyPage />}
+                />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
