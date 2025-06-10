@@ -18,6 +18,7 @@ import FoodiesAppPage from "./pages/FoodiesAppPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
 import { FoodiesPrivacyPage } from "./pages/FoodiesPrivacyPage";
+import { PostHogProvider } from "posthog-js/react";
 
 // Create a client with better defaults for our use case
 const queryClient = new QueryClient({
@@ -52,34 +53,45 @@ const App = () => {
 
   return (
     <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          <BrowserRouter>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/projects" element={<ProjectsPage />} />
-                <Route path="/projects/:slug" element={<ProjectDetail />} />
-                <Route path="/blog" element={<BlogPage />} />
-                <Route path="/blog/:slug" element={<BlogDetail />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/newsletter" element={<NewsletterPage />} />
-                <Route path="/blog/tags/:tag" element={<TagsPage />} />
-                <Route path="/posthog/policy" element={<PosthogPolicyPage />} />
-                <Route path="/foodies" element={<FoodiesAppPage />} />
-                <Route
-                  path="/foodies/privacy"
-                  element={<FoodiesPrivacyPage />}
-                />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
-            <Toaster />
-            <Sonner />
-          </BrowserRouter>
-        </TooltipProvider>
-      </QueryClientProvider>
+      <PostHogProvider
+        apiKey={import.meta.env.VITE_POSTHOG_KEY}
+        options={{
+          api_host: import.meta.env.VITE_POSTHOG_HOST,
+          enable_heatmaps: true,
+        }}
+      >
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <BrowserRouter>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/projects" element={<ProjectsPage />} />
+                  <Route path="/projects/:slug" element={<ProjectDetail />} />
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/blog/:slug" element={<BlogDetail />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/newsletter" element={<NewsletterPage />} />
+                  <Route path="/blog/tags/:tag" element={<TagsPage />} />
+                  <Route
+                    path="/posthog/policy"
+                    element={<PosthogPolicyPage />}
+                  />
+                  <Route path="/foodies" element={<FoodiesAppPage />} />
+                  <Route
+                    path="/foodies/privacy"
+                    element={<FoodiesPrivacyPage />}
+                  />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
+              <Toaster />
+              <Sonner />
+            </BrowserRouter>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </PostHogProvider>
     </HelmetProvider>
   );
 };
