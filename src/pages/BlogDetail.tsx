@@ -56,7 +56,7 @@ const BlogDetail = () => {
       <BlogMetaTags
         title={post.title}
         description={post.description}
-        image={post.featuredImage || "/placeholder.svg"}
+        image={post.featuredImage}
         url={currentUrl}
       />
       <section className="py-20">
