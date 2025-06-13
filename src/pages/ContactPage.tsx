@@ -226,7 +226,7 @@ const ContactPage = () => {
                     <button
                       type="submit"
                       disabled={contactMutation.isPending}
-                      className="bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors inline-flex items-center gap-2 disabled:opacity-70"
+                      className="bg-primary text-background px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors inline-flex items-center gap-2 disabled:opacity-70"
                     >
                       {contactMutation.isPending ? (
                         "Sending..."

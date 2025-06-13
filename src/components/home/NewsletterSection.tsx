@@ -55,7 +55,7 @@ const NewsletterSection = () => {
             <button
               type="submit"
               disabled={newsletterMutation.isPending}
-              className="bg-primary text-primary-foreground px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors disabled:opacity-70"
+              className="bg-primary text-background px-6 py-3 rounded-md font-medium hover:bg-primary/90 transition-colors disabled:opacity-70"
             >
               {newsletterMutation.isPending ? "Subscribing..." : "Subscribe"}
             </button>

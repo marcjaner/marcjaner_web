@@ -75,7 +75,7 @@ const NewsletterPage = () => {
                       <button
                         type="submit"
                         disabled={newsletterMutation.isPending}
-                        className="bg-aquamarine-500 text-white font-medium px-6 py-3 rounded-md sm:rounded-l-none sm:rounded-r-md hover:bg-aquamarine-400 transition-colors disabled:opacity-70"
+                        className="bg-primary text-background font-medium px-6 py-3 rounded-md sm:rounded-l-none sm:rounded-r-md hover:bg-primary/90 transition-colors disabled:opacity-70"
                       >
                         {newsletterMutation.isPending
                           ? "Subscribing..."

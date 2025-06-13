@@ -118,7 +118,7 @@ const ProjectDetail = () => {
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm bg-primary text-primary-foreground hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
+                  className="inline-flex items-center gap-2 text-sm bg-primary text-background hover:bg-primary/90 px-4 py-2 rounded-md transition-colors"
                 >
                   <ExternalLink size={16} /> Live Demo
                 </a>
