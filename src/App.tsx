@@ -11,6 +11,7 @@ import BlogPage from "./pages/BlogPage";
 import BlogDetail from "./pages/BlogDetail";
 import ContactPage from "./pages/ContactPage";
 import NewsletterPage from "./pages/NewsletterPage";
+import NewsletterRatingPage from "./pages/NewsletterRatingPage";
 import NotFound from "./pages/NotFound";
 import TagsPage from "./pages/TagsPage";
 import PosthogPolicyPage from "./pages/PosthogPolicyPage";
@@ -72,6 +73,7 @@ const App = () => {
                   <Route path="/blog/:slug" element={<BlogDetail />} />
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/newsletter" element={<NewsletterPage />} />
+                  <Route path="/newsletter/rate/:postId" element={<NewsletterRatingPage />} />
                   <Route path="/blog/tags/:tag" element={<TagsPage />} />
                   <Route
                     path="/posthog/policy"
