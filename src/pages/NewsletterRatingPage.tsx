@@ -66,7 +66,7 @@ const NewsletterRatingPage = () => {
   return (
     <>
       <section className="py-20">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-3 sm:px-6">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12 reveal">
               <h1 className="text-4xl font-bold mb-4">Rate Newsletter</h1>
@@ -76,9 +76,9 @@ const NewsletterRatingPage = () => {
               <div className="h-1 w-20 bg-primary mx-auto mt-4"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               <div className="md:col-span-1 reveal">
-                <div className="bg-card border border-border rounded-xl p-6">
+                <div className="bg-card border border-border rounded-xl p-4 md:p-6">
                   <div className="mb-6">
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                       <Star size={24} className="text-primary" />
@@ -121,7 +121,7 @@ const NewsletterRatingPage = () => {
               </div>
 
               <div className="md:col-span-2 reveal stagger-1">
-                <div className="bg-card border border-border rounded-xl p-6">
+                <div className="bg-card border border-border rounded-xl p-4 md:p-6">
                   <form onSubmit={handleSubmit}>
                     <div className="mb-6">
                       <label
@@ -145,7 +145,7 @@ const NewsletterRatingPage = () => {
                       <label className="block text-sm font-medium mb-2">
                         Rating (Required)
                       </label>
-                      <div className="flex items-center space-x-2 mb-2">
+                      <div className="flex items-center space-x-1 md:space-x-2 mb-2">
                         {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
                           <button
                             key={value}
