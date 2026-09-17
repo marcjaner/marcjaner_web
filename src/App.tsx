@@ -15,6 +15,7 @@ import NewsletterRatingPage from "./pages/NewsletterRatingPage";
 import NotFound from "./pages/NotFound";
 import TagsPage from "./pages/TagsPage";
 import PosthogPolicyPage from "./pages/PosthogPolicyPage";
+import MePage from "./pages/MePage";
 import FoodiesAppPage from "./pages/FoodiesAppPage";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
@@ -67,6 +68,7 @@ const App = () => {
               <Layout>
                 <Routes>
                   <Route path="/" element={<HomePage />} />
+                  <Route path="/me" element={<MePage />} />
                   <Route path="/projects" element={<ProjectsPage />} />
                   <Route path="/projects/:slug" element={<ProjectDetail />} />
                   <Route path="/blog" element={<BlogPage />} />
