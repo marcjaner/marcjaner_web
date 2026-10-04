@@ -37,7 +37,9 @@ const nav = [
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -91,10 +93,17 @@ const nav = [
           <a href="https://x.com/marcjaner_">X</a>
           <a href="https://www.linkedin.com/in/marc-janer">LinkedIn</a>
           <a href="/contact">Contact</a>
-          <a href="/support">Buy me a coffee</a>
         </nav>
       </footer>
     </div>
+    <a class="coffee" href="https://buymeacoffee.com/marcjaner" aria-label="Buy me a coffee" transition:persist="coffee">
+      <svg viewBox="0 0 16 16" aria-hidden="true" shape-rendering="crispEdges">
+        <path
+          fill="currentColor"
+          d="M5 1h1v2H5zM8 1h1v2H8zM2 4h10v1h2v4h-2v2h-1v1H3v-1H2zm10 2v2h1V6zM1 13h12v1H1z"></path>
+      </svg>
+      <span>Buy me a coffee</span>
+    </a>
     <script>
       // Mobile menu. Delegated on document so it survives view-transition swaps.
       const setMenu = (toggle: Element, open: boolean) => toggle.setAttribute("aria-expanded", String(open));

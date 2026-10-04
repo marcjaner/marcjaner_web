@@ -15,7 +15,7 @@ const { Content } = await render(post);
 const pic = art("blog", post.id);
 ---
 
-<Layout title={post.data.title} description={post.data.description} image={post.data.featuredImage}>
+<Layout title={post.data.title} description={post.data.description} image={pic?.full ?? post.data.featuredImage}>
   <article>
     <a class="back" href="/blog">Writing</a>
     <header class="post-head">

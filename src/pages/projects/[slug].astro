@@ -16,7 +16,7 @@ const pic = art("projects", project.id);
 const { title, description, featuredImage, date, technologies, liveUrl, githubUrl } = project.data;
 ---
 
-<Layout title={title} description={description} image={featuredImage}>
+<Layout title={title} description={description} image={pic?.full ?? featuredImage}>
   <article>
     <a class="back" href="/projects">Projects</a>
     <header class="post-head">

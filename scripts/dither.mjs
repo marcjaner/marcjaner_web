@@ -1,9 +1,9 @@
-// Turns photos into 1-bit "pixel art": ordered (Bayer) dithering, black dots on a
-// transparent background, with strong reds kept as a single accent colour.
+// Turns photos into 1-bit "pixel art": ordered (Bayer) dithering, black dots on white
+// paper, with strong reds optionally kept as a single accent colour.
 //
 //   node scripts/dither.mjs                 # every featuredImage in src/content (skips up-to-date ones)
 //   node scripts/dither.mjs --force         # regenerate everything
-//   node scripts/dither.mjs <in> <out.png> [--focus 0.4] [--width 640] [--no-accent]
+//   node scripts/dither.mjs <in> <out.png> [--focus 0.4] [--width 640] [--aspect 1.5] [--no-accent]
 //
 // Per-post knobs, in frontmatter:
 //   featuredFocus: 0.4      vertical centre of the 3:2 crop (0 = top, 1 = bottom), default 0.5
@@ -15,6 +15,8 @@ import { parseArgs } from "node:util";
 import sharp from "sharp";
 
 const INK = [17, 17, 17];
+// Opaque paper: link previews (WhatsApp, X) render transparency as black.
+const PAPER = [255, 255, 255];
 const ACCENT = [214, 40, 40];
 
 // Classic recursive Bayer matrix: n×n thresholds spread evenly over 0..1.
@@ -94,11 +96,12 @@ export async function dither(
 
   // 3. Threshold every pixel against the tiled Bayer matrix. Below = ink dot, above = paper.
   const dots = Buffer.alloc(n * 4);
+  for (let i = 0; i < n; i++) dots.set([...PAPER, 255], i * 4);
   for (let y = 0; y < height; y++)
     for (let x = 0; x < width; x++) {
       const i = y * width + x;
       const tone = mean + (lum[i] - mean) * contrast;
-      if (tone > MATRIX[y % 8][x % 8]) continue; // transparent paper
+      if (tone > MATRIX[y % 8][x % 8]) continue; // stays paper
       const [r, g, b] = [data[i * 3], data[i * 3 + 1], data[i * 3 + 2]];
       const red = accent && isRed(r, g, b);
       dots.set([...(red ? ACCENT : INK), 255], i * 4);
@@ -163,6 +166,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       force: { type: "boolean" },
       focus: { type: "string" },
       width: { type: "string" },
+      aspect: { type: "string" },
       "no-accent": { type: "boolean" },
     },
   });
@@ -170,6 +174,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     await dither(positionals[0], positionals[1], {
       focus: values.focus ? Number(values.focus) : undefined,
       width: values.width ? Number(values.width) : undefined,
+      aspect: values.aspect ? Number(values.aspect) : undefined,
       accent: !values["no-accent"],
     });
   } else {
