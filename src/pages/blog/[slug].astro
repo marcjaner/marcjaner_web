@@ -1,0 +1,48 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import NewsletterForm from "../../components/NewsletterForm";
+import { art } from "../../lib/art";
+import { formatDate, tagSlug } from "../../lib/format";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const pic = art("blog", post.id);
+---
+
+<Layout title={post.data.title} description={post.data.description} image={post.data.featuredImage}>
+  <article>
+    <a class="back" href="/blog">Writing</a>
+    <header class="post-head">
+      <h1>{post.data.title}</h1>
+      <div class="meta">
+        <span>{formatDate(post.data.date)}{post.data.readTime && ` · ${post.data.readTime}`}</span>
+        <ul class="tags">
+          {
+            post.data.tags.map((tag) => (
+              <li>
+                <a class="tag" href={`/blog/tags/${tagSlug(tag)}`}>{tag}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </header>
+    {pic && <img class="dither featured" src={pic.full} alt="" width="1280" height="854" />}
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+  <aside class="box">
+    <p>
+      <strong>If you liked this, there's more every week or two.</strong> What I'm building, trips,
+      money, Mallorca — in Catalan, Spanish and English.
+    </p>
+    <NewsletterForm client:visible inline />
+  </aside>
+</Layout>

@@ -1,0 +1,91 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import PostList from "../components/PostList.astro";
+
+const posts = await getCollection("blog");
+
+const timeline = [
+  {
+    when: "Sep 2025 — now",
+    place: "Livo",
+    role: "Product Engineer",
+    notes: [
+      "Automating shift scheduling for hospitals — nurses, doctors, the people who actually keep the place running.",
+    ],
+  },
+  {
+    when: "Feb 2024 — Aug 2025",
+    place: "REVER",
+    role: "Software Engineer",
+    notes: [
+      "Touched almost everything: React on the front, Go on the back, lambdas, automations, SQL.",
+      'Took production down at least once. <a href="/blog/rever-un-ano-despues">What I learned</a>.',
+    ],
+  },
+  { when: "Jun 2025", place: "Data Engineering", role: "Degree", notes: [] },
+  {
+    when: "2020",
+    place: "Janer Bus",
+    role: "Website",
+    notes: [
+      "The first thing I built: a booking site for my parents' bus company, at 16.",
+      "Close to 900 trips booked through it.",
+    ],
+  },
+];
+---
+
+<Layout>
+  <p class="lead">
+    From Mallorca, living in Barcelona. Product Engineer at Livo. I build small things, fast, and
+    write about them.
+  </p>
+  <ul class="links">
+    <li><a class="arrow" href="/me">The longer version</a></li>
+    <li><a href="https://github.com/marcjaner">GitHub</a></li>
+    <li><a href="https://x.com/marcjaner_">X</a></li>
+    <li><a href="https://www.linkedin.com/in/marc-janer">LinkedIn</a></li>
+  </ul>
+
+  <section class="section">
+    <h2 class="label">Timeline</h2>
+    <ol class="timeline">
+      {
+        timeline.map(({ when, place, role, notes }) => (
+          <li>
+            <span class="when">{when}</span>
+            <div>
+              <h3>
+                {place} <span class="role">· {role}</span>
+              </h3>
+              {notes.length > 0 && (
+                <ul>
+                  {notes.map((note) => (
+                    <li set:html={note} />
+                  ))}
+                </ul>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2 class="label">Writing <a class="arrow" href="/blog">All</a></h2>
+    <PostList posts={posts} limit={5} />
+  </section>
+
+  <aside class="box">
+    <p>
+      Every week or two I write a newsletter, in Catalan, Spanish and English — often in the same
+      sentence. It's the most honest thing I put online.
+    </p>
+    <div class="actions">
+      <a class="button" href="/newsletter">Subscribe</a>
+      <a class="arrow" href="https://marcjaner.substack.com/">Read past issues</a>
+    </div>
+  </aside>
+</Layout>

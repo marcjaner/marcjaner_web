@@ -1,0 +1,62 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="PostHog Self-Blocker - Privacy Policy">
+  <h1>Privacy Policy</h1>
+  <div class="prose">
+  <p class="meta">Last updated: May 1, 2025</p>
+  <p>
+    <strong>PostHog Self-Blocker</strong> ("we", "our", or "the Extension") is committed to protecting
+    your privacy. This Privacy Policy explains how we handle information in connection with our
+    Chrome extension, which allows you to block PostHog analytics on domains you choose.
+  </p>
+
+  <h2>1. Information We Collect</h2>
+  <ul>
+    <li>
+      <strong>Blocked Domains List</strong>: We store only the list of domains you choose to block in
+      your browser's <code>chrome.storage.sync</code>. This data is never transmitted to any external
+      server.
+    </li>
+  </ul>
+
+  <h2>2. Use of Information</h2>
+  <p>
+    The list of blocked domains is used strictly to determine when to stub out the PostHog API. No
+    other use is made of this data.
+  </p>
+
+  <h2>3. Data Storage &amp; Security</h2>
+  <ul>
+    <li>
+      All data is stored locally in your browser's synchronized storage. We do not collect, transmit,
+      or store your data on any external server.
+    </li>
+    <li>
+      You can remove or modify your blocked-domains list at any time via the Extension's Options page.
+    </li>
+  </ul>
+
+  <h2>4. Third-Party Services</h2>
+  <p>The Extension does not integrate any third-party analytics, advertising, or tracking services.</p>
+
+  <h2>5. Children's Privacy</h2>
+  <p>
+    Our Extension is not targeted at children under 13. We do not knowingly collect information from
+    anyone under 13.
+  </p>
+
+  <h2>6. Changes to This Privacy Policy</h2>
+  <p>
+    We may update this Privacy Policy from time to time. Any changes will appear here with a revised
+    "Last updated" date.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    If you have any questions or concerns about this Privacy Policy, please contact us at
+    <a href="mailto:privacy@marcjaner.com">privacy@marcjaner.com</a>.
+  </p>
+  </div>
+</Layout>

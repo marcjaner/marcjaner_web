@@ -1,0 +1,124 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "@fontsource-variable/geist";
+import "@fontsource-variable/geist/wght-italic.css";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title,
+  description = "Marc Janer — product engineer from Mallorca, living in Barcelona.",
+  image = "/og-image.png",
+} = Astro.props;
+
+const fullTitle = title ? `${title} - Marc Janer` : "Marc Janer";
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+const nav = [
+  { href: "/blog", label: "Writing" },
+  { href: "/projects", label: "Projects" },
+  { href: "/me", label: "About" },
+  { href: "/newsletter", label: "Newsletter" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      if (!sessionStorage.getItem("seen")) {
+        document.documentElement.classList.add("anim");
+        sessionStorage.setItem("seen", "1");
+      }
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <div class="page">
+      <header class:list={["site", { compact: path !== "/" }]}>
+        <a class="art" href="/" aria-label="Home" transition:persist="header-art">
+          <img
+            src="/header.png"
+            alt="Dithered photo of a poppy in a field in Mallorca"
+            width="1280"
+            height="854"
+          />
+        </a>
+      </header>
+      <div class="bar">
+        <a class="name" href="/" aria-current={path === "/" ? "page" : undefined}>Marc Janer</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+          <span class="visually-hidden">Menu</span>
+        </button>
+        <nav id="site-nav">
+          <div class="nav-links">
+            {
+              nav.map(({ href, label }) => (
+                <a href={href} aria-current={path.startsWith(href) ? "page" : undefined}>
+                  {label}
+                </a>
+              ))
+            }
+          </div>
+        </nav>
+      </div>
+      <main>
+        <slot />
+      </main>
+      <footer class="site">
+        <span>Mallorca → Barcelona</span>
+        <nav>
+          <a href="https://github.com/marcjaner">GitHub</a>
+          <a href="https://x.com/marcjaner_">X</a>
+          <a href="https://www.linkedin.com/in/marc-janer">LinkedIn</a>
+          <a href="/contact">Contact</a>
+          <a href="/support">Buy me a coffee</a>
+        </nav>
+      </footer>
+    </div>
+    <script>
+      // Mobile menu. Delegated on document so it survives view-transition swaps.
+      const setMenu = (toggle: Element, open: boolean) => toggle.setAttribute("aria-expanded", String(open));
+      document.addEventListener("click", (e) => {
+        const toggle = (e.target as Element).closest(".menu-toggle");
+        if (toggle) setMenu(toggle, toggle.getAttribute("aria-expanded") !== "true");
+      });
+      document.addEventListener("keydown", (e) => {
+        const toggle = document.querySelector(".menu-toggle");
+        if (e.key === "Escape" && toggle) setMenu(toggle, false);
+      });
+    </script>
+    <script>
+      import posthog from "posthog-js";
+
+      const key = import.meta.env.VITE_POSTHOG_KEY;
+      if (key) {
+        posthog.init(key, {
+          api_host: import.meta.env.VITE_POSTHOG_HOST,
+          capture_pageview: false,
+          enable_heatmaps: true,
+        });
+        document.addEventListener("astro:page-load", () => posthog.capture("$pageview"));
+      }
+    </script>
+  </body>
+</html>

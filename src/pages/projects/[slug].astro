@@ -1,0 +1,44 @@
+---
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import { art } from "../../lib/art";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects
+    .filter((project) => project.body?.trim())
+    .map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const pic = art("projects", project.id);
+const { title, description, featuredImage, date, technologies, liveUrl, githubUrl } = project.data;
+---
+
+<Layout title={title} description={description} image={featuredImage}>
+  <article>
+    <a class="back" href="/projects">Projects</a>
+    <header class="post-head">
+      <h1>{title}</h1>
+      <div class="meta">
+        <span>{date}</span>
+        <ul class="tags">
+          {
+            technologies.map((tech) => (
+              <li>
+                <span class="tag">{tech}</span>
+              </li>
+            ))
+          }
+        </ul>
+        {liveUrl && <a class="arrow" href={liveUrl}>Live</a>}
+        {githubUrl && <a class="arrow" href={githubUrl}>Source</a>}
+      </div>
+    </header>
+    {pic && <img class="dither featured" src={pic.full} alt="" width="1280" height="854" />}
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</Layout>

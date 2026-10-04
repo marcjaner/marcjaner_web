@@ -1,0 +1,16 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import PostList from "../../components/PostList.astro";
+
+const posts = await getCollection("blog");
+---
+
+<Layout title="Writing" description="Things I've written about startups, building, and Mallorca.">
+  <h1>Writing</h1>
+  <p class="muted">
+    Longer pieces live here. The rest goes out in{" "}
+    <a href="https://marcjaner.substack.com/">the newsletter</a>.
+  </p>
+  <PostList posts={posts} />
+</Layout>
