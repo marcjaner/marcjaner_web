@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { art } from "../lib/art";
+import { formatDate, tagSlug } from "../lib/format";
+
+interface Props {
+  posts: CollectionEntry<"blog">[];
+  limit?: number;
+}
+
+const posts = [...Astro.props.posts]
+  .sort((a, b) => +b.data.date - +a.data.date)
+  .slice(0, Astro.props.limit);
+---
+
+<div>
+  {
+    posts.map((post) => {
+      const pic = art("blog", post.id);
+      return (
+        <article class:list={["entry", { "has-art": pic }]}>
+          {pic && (
+            <a class="entry-art" href={`/blog/${post.id}`} tabindex="-1" aria-hidden="true">
+              <picture>
+                  <source media="(width <= 600px)" srcset={pic.full} />
+                  <img class="dither" src={pic.thumb} alt="" width="400" height="266" loading="lazy" />
+                </picture>
+            </a>
+          )}
+          <div>
+            <h3>
+              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+            </h3>
+            <p>{post.data.description}</p>
+            <div class="foot">
+              <span class="meta">{formatDate(post.data.date)}</span>
+              <ul class="tags">
+                {post.data.tags.map((tag) => (
+                  <li>
+                    <a class="tag" href={`/blog/tags/${tagSlug(tag)}`}>{tag}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </article>
+      );
+    })
+  }
+</div>

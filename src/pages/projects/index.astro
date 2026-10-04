@@ -1,0 +1,52 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import { art } from "../../lib/art";
+
+const projects = await getCollection("projects");
+---
+
+<Layout title="Projects" description="Small things I've built, mostly for myself.">
+  <h1>Projects</h1>
+  <p class="muted">Small things, built fast, mostly for myself. Some get used by a hundred people.</p>
+  <div>
+    {
+      projects.map((project) => {
+        const { title, description, date, technologies, liveUrl, githubUrl } = project.data;
+        const hasPage = Boolean(project.body?.trim());
+        const href = hasPage ? `/projects/${project.id}` : liveUrl;
+        const pic = art("projects", project.id);
+        return (
+          <article class:list={["entry", { "has-art": pic }]}>
+            {pic && (
+              <a class="entry-art" href={href} tabindex="-1" aria-hidden="true">
+                <picture>
+                  <source media="(width <= 600px)" srcset={pic.full} />
+                  <img class="dither" src={pic.thumb} alt="" width="400" height="266" loading="lazy" />
+                </picture>
+              </a>
+            )}
+            <div>
+              <h3>
+                <a href={href}>{title}</a>
+              </h3>
+              <p>{description}</p>
+              <div class="foot">
+                <span class="meta">{date}</span>
+                <ul class="tags">
+                  {technologies.map((tech) => (
+                    <li>
+                      <span class="tag">{tech}</span>
+                    </li>
+                  ))}
+                </ul>
+                {liveUrl && <a class="arrow meta" href={liveUrl}>Live</a>}
+                {githubUrl && <a class="arrow meta" href={githubUrl}>Source</a>}
+              </div>
+            </div>
+          </article>
+        );
+      })
+    }
+  </div>
+</Layout>

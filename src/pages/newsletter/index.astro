@@ -1,0 +1,21 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import NewsletterForm from "../../components/NewsletterForm";
+---
+
+<Layout
+  title="Newsletter"
+  description="Every week or two, in Catalan, Spanish and English: what I'm building, trips, money, Mallorca."
+>
+  <h1>Newsletter</h1>
+  <p class="lead">
+    Every week or two, in Catalan, Spanish and English — often in the same sentence. About what I'm
+    building, trips, money, Mallorca, and whatever I can't stop thinking about.
+  </p>
+  <p>
+    Read past issues on <a href="https://marcjaner.substack.com/">Substack</a>, or leave your email
+    and I'll add you.
+  </p>
+  <NewsletterForm client:visible />
+  <p class="meta fine-print">I won't share your email. Unsubscribe whenever you want.</p>
+</Layout>

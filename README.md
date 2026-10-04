@@ -1,69 +1,17 @@
-# Welcome to your Lovable project
+# marcjaner.com
 
-## Project info
-
-**URL**: https://lovable.dev/projects/27305675-3993-4d2c-92fb-71201b37a2b3
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/27305675-3993-4d2c-92fb-71201b37a2b3) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+Astro site with React islands for the three forms (contact, newsletter signup, newsletter rating).
+Deployed on Netlify; form handlers live in `netlify/functions`.
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm install
+npm run dev          # site only, http://localhost:4321
+npm run netlify:dev  # site + functions, http://localhost:8888
+npm run build
 ```
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/27305675-3993-4d2c-92fb-71201b37a2b3) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- Writing: `src/content/blog/*.md`. Projects: `src/content/projects/*.md` (a project with no body links straight to its `liveUrl`).
+- Pixel art: `scripts/dither.mjs` turns photos into 1-bit Bayer-dithered PNGs.
+  - Every `featuredImage` in `src/content` is dithered automatically before `dev`/`build` into `public/dithered/` (git-ignored). Optional frontmatter: `featuredFocus: 0.4` (vertical crop centre), `featuredAccent: true` (keep reds).
+  - Header art: `node scripts/dither.mjs public/images/blog/tornar-a-mallorca/rosella.png public/header.png --focus 0.37`
+- Env (Netlify): `VITE_POSTHOG_KEY`, `VITE_POSTHOG_HOST` (exposed to the client), `VITE_RESEND_API_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY` (functions only).

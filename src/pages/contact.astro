@@ -1,0 +1,13 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ContactForm from "../components/ContactForm";
+---
+
+<Layout title="Contact" description="Write to Marc Janer.">
+  <h1>Contact</h1>
+  <p class="muted">
+    Have a question or want to work together? Email me at
+    <a href="mailto:marcjanerferrer@gmail.com">marcjanerferrer@gmail.com</a>, or use the form.
+  </p>
+  <ContactForm client:visible />
+</Layout>

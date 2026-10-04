@@ -1,0 +1,10 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import RatingForm from "../../../components/RatingForm";
+---
+
+<Layout title="Rate this issue">
+  <h1>Rate this issue</h1>
+  <p class="muted">It takes ten seconds and tells me what to write more of.</p>
+  <RatingForm client:load />
+</Layout>

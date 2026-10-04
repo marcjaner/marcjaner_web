@@ -1,17 +1,14 @@
-# netlify.toml
-
 [build]
   functions = "netlify/functions"
   publish = "dist"
   command = "npm run build"
 
+[build.environment]
+  # Astro 7 needs Node >= 22.12.
+  NODE_VERSION = "24"
+
 [dev]
-  framework = "vite"
-  targetPort = 8080
-  port = 8888
-  functionsPort = 9999
-  publish = "public"
-  command = "npm run dev"
+  framework = "astro"
   autoLaunch = false
 
 [[redirects]]
@@ -24,7 +21,8 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+# One static page reads the post id from the URL.
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/newsletter/rate/*"
+  to = "/newsletter/rate/index.html"
   status = 200
