@@ -1,0 +1,86 @@
+---
+import { render } from "astro:content";
+import Layout from "../../../../layouts/Layout.astro";
+import { art } from "../../../../lib/art";
+import { getProjectContent, projectUpdateHref } from "../../../../lib/content";
+import { formatDate, tagSlug } from "../../../../lib/format";
+
+export async function getStaticPaths() {
+  const { projects, updates } = await getProjectContent();
+  const byId = new Map(projects.map((project) => [project.id, project]));
+  return updates.map((update) => {
+    const siblings = updates.filter((other) => other.data.project.id === update.data.project.id);
+    const index = siblings.findIndex((other) => other.id === update.id);
+    return {
+      params: { slug: update.data.project.id, update: update.id },
+      props: {
+        update,
+        project: byId.get(update.data.project.id)!,
+        older: siblings[index + 1],
+        newer: siblings[index - 1],
+      },
+    };
+  });
+}
+
+const { update, project, older, newer } = Astro.props;
+const { Content } = await render(update);
+const pic = art("project-updates", update.id);
+const { title, description, date, readTime, tags, showInBlog, draft, featuredImage } = update.data;
+const dev = import.meta.env.DEV;
+---
+
+<Layout title={title} description={description} image={pic?.full ?? featuredImage}>
+  <article>
+    <a class="back" href={`/projects/${project.id}`}>{project.data.title}</a>
+    <header class="post-head">
+      <h1>
+        {title}
+        {dev && (draft || project.data.draft) && <span class="tag">Draft</span>}
+      </h1>
+      <div class="meta">
+        <span>
+          <time datetime={date.toISOString().slice(0, 10)}>
+            {formatDate(date)}
+          </time>
+          {readTime && ` · ${readTime}`}
+        </span>
+        <ul class="tags">
+          {
+            tags.map((tag) => (
+              <li>
+                {showInBlog ? (
+                  <a class="tag" href={`/blog/tags/${tagSlug(tag)}`}>{tag}</a>
+                ) : (
+                  <span class="tag">{tag}</span>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </header>
+    {pic && <img class="dither featured" src={pic.full} alt="" width="1280" height="854" />}
+    <div class="prose">
+      <Content />
+    </div>
+    {
+      (older || newer) && (
+        <nav class="journal-nav" aria-label="Journal entries">
+          {older && (
+            <a rel="prev" href={projectUpdateHref(older)}>
+              <span class="meta">Previous</span>
+              {older.data.title}
+            </a>
+          )}
+          {newer && (
+            <a rel="next" href={projectUpdateHref(newer)}>
+              <span class="meta">Next</span>
+              {newer.data.title}
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </article>
+</Layout>

@@ -1,28 +1,42 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { art } from "../../lib/art";
+import { getProjectContent, projectUpdateHref } from "../../lib/content";
+import { formatDate } from "../../lib/format";
 
 export async function getStaticPaths() {
-  const projects = await getCollection("projects");
-  return projects
-    .filter((project) => project.body?.trim())
-    .map((project) => ({ params: { slug: project.id }, props: { project } }));
+  const { projects, updates } = await getProjectContent();
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: {
+      project,
+      updates: updates.filter((update) => update.data.project.id === project.id),
+    },
+  }));
 }
 
-const { project } = Astro.props;
+const { project, updates } = Astro.props;
 const { Content } = await render(project);
 const pic = art("projects", project.id);
-const { title, description, featuredImage, date, technologies, liveUrl, githubUrl } = project.data;
+const { title, description, featuredImage, date, started, status, draft, technologies, liveUrl, githubUrl } =
+  project.data;
+const when = date ?? (started ? formatDate(started) : undefined);
+const dev = import.meta.env.DEV;
+const hasBody = Boolean(project.body?.trim());
 ---
 
 <Layout title={title} description={description} image={pic?.full ?? featuredImage}>
   <article>
     <a class="back" href="/projects">Projects</a>
     <header class="post-head">
-      <h1>{title}</h1>
+      <h1>
+        {title}
+        {dev && draft && <span class="tag">Draft</span>}
+      </h1>
       <div class="meta">
-        <span>{date}</span>
+        <span>{status}</span>
+        {when && <span>{when}</span>}
         <ul class="tags">
           {
             technologies.map((tech) => (
@@ -38,7 +52,33 @@ const { title, description, featuredImage, date, technologies, liveUrl, githubUr
     </header>
     {pic && <img class="dither featured" src={pic.full} alt="" width="1280" height="854" />}
     <div class="prose">
-      <Content />
+      <p>{description}</p>
+      {hasBody && <Content />}
     </div>
+    {
+      updates.length > 0 && (
+        <section class="section">
+          <h2 class="label">Journal</h2>
+          <div>
+            {updates.map((update) => (
+              <article class="entry">
+                <h3>
+                  <a href={projectUpdateHref(update)}>{update.data.title}</a>
+                  {dev && update.data.draft && <span class="tag">Draft</span>}
+                </h3>
+                <p>{update.data.description}</p>
+                <div class="foot">
+                  <span class="meta">
+                    <time datetime={update.data.date.toISOString().slice(0, 10)}>
+                      {formatDate(update.data.date)}
+                    </time>
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )
+    }
   </article>
 </Layout>
