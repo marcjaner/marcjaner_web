@@ -3,7 +3,7 @@ title: "Sample project: a tiny reading notebook"
 description: "Illustrative example content, not a real project: a small notebook for keeping track of what I read and what it made me think."
 status: active
 started: 2026-10-13
-draft: false
+draft: true
 ---
 
 This page is illustrative sample content shipped with the project journal feature — it

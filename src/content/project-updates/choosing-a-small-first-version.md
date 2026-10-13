@@ -4,7 +4,7 @@ description: "Illustrative example entry: a reflection on scoping the smallest h
 project: "sample-project"
 date: 2026-10-13
 showInBlog: true
-draft: false
+draft: true
 tags: ["Building"]
 ---
 

@@ -354,13 +354,16 @@ Broken body.
   const dev = await devServer();
   let devExit = "not terminated";
   try {
-    const [hidden, hiddenChild, draftUpdate, blog, projectsIndex] = await Promise.all([
-      get(dev.port, "/projects/zz-jrnl-hidden"),
-      get(dev.port, "/projects/zz-jrnl-hidden/updates/zz-jrnl-hidden-child"),
-      get(dev.port, "/projects/zz-jrnl-a/updates/zz-jrnl-a-draft"),
-      get(dev.port, "/blog"),
-      get(dev.port, "/projects"),
-    ]);
+    const [hidden, hiddenChild, draftUpdate, blog, projectsIndex, sample, sampleUpdate] =
+      await Promise.all([
+        get(dev.port, "/projects/zz-jrnl-hidden"),
+        get(dev.port, "/projects/zz-jrnl-hidden/updates/zz-jrnl-hidden-child"),
+        get(dev.port, "/projects/zz-jrnl-a/updates/zz-jrnl-a-draft"),
+        get(dev.port, "/blog"),
+        get(dev.port, "/projects"),
+        get(dev.port, "/projects/sample-project"),
+        get(dev.port, "/projects/sample-project/updates/choosing-a-small-first-version"),
+      ]);
     const around = (body, needle, span = 500) => {
       const i = body.indexOf(needle);
       assert.notEqual(i, -1, `${needle} not found`);
@@ -391,6 +394,16 @@ Broken body.
         />Draft</,
       );
     });
+    check("dev exposes sample drafts with badges on page and Writing entry", () => {
+      assert.equal(sample.status, 200);
+      assert.match(around(sample.body, "<h1"), />Draft</);
+      assert.equal(sampleUpdate.status, 200);
+      assert.match(around(sampleUpdate.body, "<h1"), />Draft</);
+      assert.match(
+        around(blog.body, 'href="/projects/sample-project/updates/choosing-a-small-first-version"'),
+        />Draft</,
+      );
+    });
   } finally {
     await dev.kill();
     devExit =
@@ -416,9 +429,31 @@ try {
 const final = runBuild("clean");
 check("final clean production build exits 0", () => assert.equal(final.code, 0, final.text));
 if (!setupError && final.code === 0) {
-  check("final build contains committed sample content only", () => {
-    assert.ok(exists("/projects/sample-project"));
-    assert.ok(exists("/projects/sample-project/updates/choosing-a-small-first-version"));
+  check("final production build excludes sample drafts and test fixtures", () => {
+    assert.equal(exists("/projects/sample-project"), false);
+    assert.equal(
+      exists("/projects/sample-project/updates/choosing-a-small-first-version"),
+      false,
+    );
+    assert.equal(read("/projects").includes("sample-project"), false);
+    assert.equal(
+      read("/blog").includes("/projects/sample-project/updates/choosing-a-small-first-version"),
+      false,
+    );
+    assert.equal(
+      read("/").includes("/projects/sample-project/updates/choosing-a-small-first-version"),
+      false,
+    );
+    if (exists("/blog/tags/building")) {
+      assert.equal(
+        read("/blog/tags/building").includes(
+          "/projects/sample-project/updates/choosing-a-small-first-version",
+        ),
+        false,
+      );
+    }
+    assert.equal(sitemap().includes("sample-project"), false);
+    assert.equal(sitemap().includes("choosing-a-small-first-version"), false);
     assert.equal(sitemap().includes("zz-jrnl"), false);
     assert.equal(read("/projects").includes("zz-jrnl"), false);
   });
