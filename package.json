@@ -11,6 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "test:journal": "node scripts/test-project-journal.mjs",
     "netlify:dev": "netlify dev"
   },
   "dependencies": {

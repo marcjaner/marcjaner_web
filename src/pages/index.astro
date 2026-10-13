@@ -1,9 +1,9 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import PostList from "../components/PostList.astro";
+import { getWritingPosts } from "../lib/content";
 
-const posts = await getCollection("blog");
+const posts = await getWritingPosts();
 
 const timeline = [
   {

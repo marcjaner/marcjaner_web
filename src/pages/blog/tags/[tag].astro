@@ -1,16 +1,16 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "../../../layouts/Layout.astro";
 import PostList from "../../../components/PostList.astro";
+import { getWritingPosts } from "../../../lib/content";
 import { tagSlug } from "../../../lib/format";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog");
+  const posts = await getWritingPosts();
   const tags = new Map<string, string>();
-  for (const post of posts) for (const tag of post.data.tags) tags.set(tagSlug(tag), tag);
+  for (const post of posts) for (const tag of post.entry.data.tags) tags.set(tagSlug(tag), tag);
   return [...tags].map(([slug, name]) => ({
     params: { tag: slug },
-    props: { name, posts: posts.filter((p) => p.data.tags.includes(name)) },
+    props: { name, posts: posts.filter((p) => p.entry.data.tags.includes(name)) },
   }));
 }
 

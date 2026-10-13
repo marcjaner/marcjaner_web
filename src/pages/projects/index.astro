@@ -1,9 +1,16 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import { art } from "../../lib/art";
+import { getProjectContent } from "../../lib/content";
+import { formatDate } from "../../lib/format";
 
-const projects = await getCollection("projects");
+const { projects, updates } = await getProjectContent();
+const latestUpdate = new Map<string, Date>();
+for (const update of updates) {
+  const id = update.data.project.id;
+  if (!latestUpdate.has(id)) latestUpdate.set(id, update.data.date);
+}
+const dev = import.meta.env.DEV;
 ---
 
 <Layout title="Projects" description="Small things I've built, mostly for myself.">
@@ -12,9 +19,11 @@ const projects = await getCollection("projects");
   <div>
     {
       projects.map((project) => {
-        const { title, description, date, technologies, liveUrl, githubUrl } = project.data;
-        const hasPage = Boolean(project.body?.trim());
-        const href = hasPage ? `/projects/${project.id}` : liveUrl;
+        const { title, description, date, started, status, draft, technologies, liveUrl, githubUrl } =
+          project.data;
+        const href = `/projects/${project.id}`;
+        const latest = latestUpdate.get(project.id);
+        const when = date ?? (started ? formatDate(started) : undefined);
         const pic = art("projects", project.id);
         return (
           <article class:list={["entry", { "has-art": pic }]}>
@@ -29,10 +38,13 @@ const projects = await getCollection("projects");
             <div>
               <h3>
                 <a href={href}>{title}</a>
+                {dev && draft && <span class="tag">Draft</span>}
               </h3>
               <p>{description}</p>
               <div class="foot">
-                <span class="meta">{date}</span>
+                <span class="meta">{status}</span>
+                {when && <span class="meta">{when}</span>}
+                {latest && <span class="meta">Journal · {formatDate(latest)}</span>}
                 <ul class="tags">
                   {technologies.map((tech) => (
                     <li>

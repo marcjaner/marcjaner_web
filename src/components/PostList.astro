@@ -1,26 +1,35 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import { art } from "../lib/art";
+import type { WritingPost } from "../lib/content";
 import { formatDate, tagSlug } from "../lib/format";
 
 interface Props {
-  posts: CollectionEntry<"blog">[];
+  posts: WritingPost[];
   limit?: number;
 }
 
 const posts = [...Astro.props.posts]
-  .sort((a, b) => +b.data.date - +a.data.date)
+  .sort(
+    (a, b) =>
+      +b.entry.data.date - +a.entry.data.date ||
+      a.entry.collection.localeCompare(b.entry.collection) ||
+      a.entry.id.localeCompare(b.entry.id),
+  )
   .slice(0, Astro.props.limit);
+const dev = import.meta.env.DEV;
 ---
 
 <div>
   {
     posts.map((post) => {
-      const pic = art("blog", post.id);
+      const { entry, href } = post;
+      const isUpdate = entry.collection === "projectUpdates";
+      const isDraft = isUpdate && (entry.data.draft || post.project?.draft);
+      const pic = art(isUpdate ? "project-updates" : "blog", entry.id);
       return (
         <article class:list={["entry", { "has-art": pic }]}>
           {pic && (
-            <a class="entry-art" href={`/blog/${post.id}`} tabindex="-1" aria-hidden="true">
+            <a class="entry-art" href={href} tabindex="-1" aria-hidden="true">
               <picture>
                   <source media="(width <= 600px)" srcset={pic.full} />
                   <img class="dither" src={pic.thumb} alt="" width="400" height="266" loading="lazy" />
@@ -29,13 +38,25 @@ const posts = [...Astro.props.posts]
           )}
           <div>
             <h3>
-              <a href={`/blog/${post.id}`}>{post.data.title}</a>
+              <a href={href}>{entry.data.title}</a>
+              {dev && isDraft && <span class="tag">Draft</span>}
             </h3>
-            <p>{post.data.description}</p>
+            <p>{entry.data.description}</p>
             <div class="foot">
-              <span class="meta">{formatDate(post.data.date)}</span>
+              <span class="meta">{formatDate(entry.data.date)}</span>
+              {isUpdate && (
+                <span class="meta">
+                  Project update
+                  {post.project && (
+                    <>
+                      {" · "}
+                      <a href={post.project.href}>{post.project.title}</a>
+                    </>
+                  )}
+                </span>
+              )}
               <ul class="tags">
-                {post.data.tags.map((tag) => (
+                {entry.data.tags.map((tag) => (
                   <li>
                     <a class="tag" href={`/blog/tags/${tagSlug(tag)}`}>{tag}</a>
                   </li>
